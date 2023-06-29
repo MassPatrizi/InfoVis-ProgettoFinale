@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v6.js"></script>
+
+<!-- Create a div for the header -->
+<div id="my_header" style="text-align: center;">
+    <h1>Networks Graph for Top 100 BoardGames from BoardGameGeek.xom</h1>
+    <p>Legenda:</p>
+    <ul style="list-style: none;">
+        <li><span style="color: #ffffb2;">●</span> 0-5 collegamenti</li>
+        <li><span style="color: #fecc5c;">●</span> 6-10 collegamenti</li>
+        <li><span style="color: #fd8d3c;">●</span> 11-15 collegamenti</li>
+        <li><span style="color: #f03b20;">●</span> 16-20 collegamenti</li>
+        <li><span style="color: #bd0026;">●</span> 21+ collegamenti</li>
+    </ul>
+</div>
+
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+
+
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+
+
+
+<body>
+    <script>
+
+        // set the dimensions and margins of the graph
+        const margin = { top: 10, right: 30, bottom: 30, left: 40 },
+            width = window.innerWidth - margin.left - margin.right,
+            height = window.innerHeight - margin.top - margin.bottom;
+
+        // Create a zoomable SVG element
+        const svg = d3.select("#my_dataviz")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .call(d3.zoom().on("zoom", function (event) {
+                svg.attr("transform", event.transform);
+            }))
+            .append("g")
+            .attr("transform",
+                `translate(${margin.left}, ${margin.top})`);
+
+
+        d3.json("output.json").then(function (data) {
+
+            // Define arrow marker
+            svg.append("defs").append("marker")
+                .attr("id", "arrow")
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 25)
+                .attr("refY", 0)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M0,-5L10,0L0,5");
+
+            // Initialize the links
+            const link = svg
+                .selectAll("line")
+                .data(data.links)
+                .join("line")
+                .style("stroke", "#aaa")
+                .attr("marker-end", "url(#arrow)");
+
+            /* // Function to map number of links to a color
+            function getColor(numLinks) {
+                if (numLinks <= 10) {
+                    return "yellow";
+                } else if (numLinks <= 30) {
+                    return "orange";
+                } else {
+                    return "red";
+                }
+            } */
+
+            // Create a color scale
+            const colorScale = d3.scaleQuantize()
+                .domain([0, d3.max(data.nodes, function (d) {
+                    // Get number of links for this node
+                    return data.links.filter(link => link.source == d.id || link.target == d.id).length;
+                })])
+                .range(["#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"]);
+
+
+            // Initialize the nodes
+            const node = svg
+                .selectAll("circle")
+                .data(data.nodes)
+                .join("circle")
+                .attr("r", 12)
+                .style("fill", function (d) {
+                    // Get number of links for this node
+                    const numLinks = data.links.filter(link => link.source == d.id || link.target == d.id).length;
+                    // Set fill color based on number of links
+                    return colorScale(numLinks);
+                })
+                .on("click", function (event, d) {
+                    // Find connected nodes
+                    console.log(data.links.filter(link => link.source == d.id || link.target == d.id)
+                        .map(link => link.source == d.id ? link.target : link.source))
+                    const connectedNodes = data.links.filter(link => link.source == d.id || link.target == d.id)
+                        .map(link => link.source == d.id ? link.target : link.source);
+                    const connectedNodeNames = data.nodes.filter(node => connectedNodes.includes(node.id))
+                        .map(node => node.name);
+                    // Show tooltip with connected node names
+                    //alert('Connected nodes:'+ connectedNodeNames.join(", "));
+                    console.log(connectedNodeNames)
+                });
+
+            // Add labels to the nodes
+            const label = svg
+                .selectAll("text")
+                .data(data.nodes)
+                .join("text")
+                .attr("dx", 0)
+                .attr("dy", ".35em")
+                .style("font-size", 2)
+                .text(function (d) { return d.name });
+
+            // Let's list the force we wanna apply on the network
+            const simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
+                .force("link", d3.forceLink()                               // This force provides links between nodes
+                    .id(function (d) { return d.id; })                     // This provide  the id of a node
+                    .links(data.links)                                    // and this the list of links
+                )
+                .force("charge", d3.forceManyBody().strength(-4000))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+                .force("center", d3.forceCenter(width / 2, height / 2))     // This force attracts nodes to the center of the svg area
+                .on("end", ticked);
+
+            // This function is run at each iteration of the force algorithm, updating the nodes position.
+            function ticked() {
+                link
+                    .attr("x1", function (d) { return d.source.x; })
+                    .attr("y1", function (d) { return d.source.y; })
+                    .attr("x2", function (d) { return d.target.x; })
+                    .attr("y2", function (d) { return d.target.y; });
+
+                node
+                    .attr("cx", function (d) { return d.x; })
+                    .attr("cy", function (d) { return d.y; });
+
+                label
+                    .attr("x", function (d) { return d.x; })
+                    .attr("y", function (d) { return d.y; });
+
+            }
+            console.log(data.links)
+        });
+    </script>
+</body>
