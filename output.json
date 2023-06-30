@@ -2,7 +2,8 @@
     "nodes": [
         {
             "id": 174430,
-            "name": "Gloomhaven"
+            "name": "Gloomhaven",
+            "image": "https://cdn1.epicgames.com/spt-assets/ef2777467a3c49059a076e42fd9b41f0/gloomhaven-offer-1j9mc.jpg"
         },
         {
             "id": 224517,

@@ -5,9 +5,6 @@
 <script src="https://d3js.org/d3.v6.js"></script>
 <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="blurt.min.css">
-<script src="blurt.min.js"></script>
-
 <!-- Create a div for the header -->
 <div id="my_header" style="text-align: center;">
     <h1>Networks Graph for Top 100 BoardGames from BoardGameGeek.xom</h1>
@@ -110,17 +107,37 @@
                 .attr("class", "tooltip")
                 .style("opacity", 0)
 
+            // Define a pattern for each node
+            const patterns = svg
+                .selectAll("pattern")
+                .data(data.nodes)
+                .join("pattern")
+                .attr("id", d => `pattern-${d.id}`)
+                .attr("width", 1)
+                .attr("height", 1)
+                .append("image")
+                .attr("xlink:href", d => d.image)
+                .attr("width", 100)
+                .attr("height", 100)
+                .attr("x", -12.5)
+                .attr("y", -23);
+
             // Initialize the nodes
             const node = svg
                 .selectAll("circle")
                 .data(data.nodes)
                 .join("circle")
+                .attr("r", 25)
+                .style("fill", d => `url(#pattern-${d.id})`)
                 .attr("r", 20)
-                .style("fill", function (d) {
+                /* .style("fill", function (d) {
                     // Get number of links for this node
                     const numLinks = data.links.filter(link => link.source == d.id || link.target == d.id).length;
                     // Set fill color based on number of links
-                    return colorScale(numLinks);
+                    return colorScale(numLinks)
+                }) */
+                .attr("xlink:href", function (d) {
+                    return d.image;
                 })
                 .on("click", function (event, d) {
                     // Find connected nodes
@@ -141,23 +158,41 @@
                     var mouseY = event.clientY;
                     const connectedNodes = nodeMap[d.id];
                     console.log("ao" + connectedNodes)
+                    d3.select(event.currentTarget)
+                        .transition()
+                        .duration(2000)
+                        .style("stroke", "red")
+                        .style("stroke-width", 2);
                     tip.style("opacity", 1)
-                        .html('<br> Selected Game: '+ "<span style='color:green'>"+d.name +"</span>"+
-                         '<br> Related games: <br>' + connectedNodes.join(" - \n "))
+                        .html('<br> Selected Game: ' + "<span style='color:green'>" + d.name + "</span>" +
+                            '<br> Related games: <br>' + connectedNodes.join(" - \n "))
                         .style("top", (mouseY + 50) + "px");
                     link.filter(function (l) {
                         return l.source === d || l.target === d;
                     }).transition().duration(200).style("stroke", "red")
-                    .attr("marker-end", "url(#arrow-red)");
+                        .attr("marker-end", "url(#arrow-red)");
 
                 })
                 .on("mouseout", (event, d) => {
                     tip.style("opacity", 0);
+                    d3.select(event.currentTarget)
+                        .transition()
+                        .duration(2000)
+                        .style("stroke", "none");
                     link.filter(function (l) {
                         return l.source === d || l.target === d;
                     }).transition().duration(2000).style("stroke", "#999")
-                    .attr("marker-end", "url(#arrow)");
+                        .attr("marker-end", "url(#arrow)");
                 });
+
+            node.append("svg:image")
+                .attr("xlink:href", function (d) {
+                    return d.image;
+                })
+                .attr("x", -25)
+                .attr("y", -25)
+                .attr("width", 50)
+                .attr("height", 50);
 
             // Add labels to the nodes
             const label = svg
