@@ -4,3 +4,16 @@ ul{
 html{
     background-color: rgba(131, 148, 174, 0.47);
 }
+.tooltip {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    width: 300px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #363636;
+    color: #fff;
+    text-align: center;
+    opacity: 0;
+    transition: .3s opacity;
+}
