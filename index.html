@@ -22,7 +22,6 @@
 <div id="my_dataviz"></div>
 
 
-
 <body>
     <script>
 
@@ -46,6 +45,16 @@
 
         d3.json("output.json").then(function (data) {
 
+            const nodeMap = {};
+            data.nodes.forEach(node => {
+                const connectedNodes = data.links.filter(link => link.source == node.id || link.target == node.id)
+                    .map(link => link.source == node.id ? link.target : link.source);
+                const connectedNodeNames = data.nodes.filter(node => connectedNodes.includes(node.id))
+                    .map(node => node.name);
+                nodeMap[node.id] = connectedNodeNames;
+            });
+
+
             // Define arrow marker
             svg.append("defs").append("marker")
                 .attr("id", "arrow")
@@ -63,19 +72,9 @@
                 .selectAll("line")
                 .data(data.links)
                 .join("line")
-                .style("stroke", "#000000")
+                .style("stroke", "#999")
                 .attr("marker-end", "url(#arrow)");
 
-            /* // Function to map number of links to a color
-            function getColor(numLinks) {
-                if (numLinks <= 10) {
-                    return "yellow";
-                } else if (numLinks <= 30) {
-                    return "orange";
-                } else {
-                    return "red";
-                }
-            } */
 
             // Create a color scale
             const colorScale = d3.scaleQuantize()
@@ -100,25 +99,21 @@
                 })
                 .on("click", function (event, d) {
                     // Find connected nodes
-                    console.log(data.links.filter(link => link.source == d.id || link.target == d.id)
-                        .map(link => link.source == d.id ? link.target : link.source))
-                    const connectedNodes = data.links.filter(link => link.source == d.id || link.target == d.id)
-                        .map(link => link.source == d.id ? link.target : link.source);
-                    const connectedNodeNames = data.nodes.filter(node => connectedNodes.includes(node.id))
-                        .map(node => node.name);
+                    const connectedNodes = nodeMap[d.id];
                     // Show tooltip with connected node names
-                    //alert('Connected nodes:'+ connectedNodeNames.join(", "));
-                    console.log(connectedNodeNames)
-                });
+                    alert('Connected nodes: \n' + connectedNodes.join(" \n "));
+                    console.log(connectedNodes)
+                })
+                .call(drag);
 
             // Add labels to the nodes
             const label = svg
                 .selectAll("text")
                 .data(data.nodes)
                 .join("text")
-                .attr("dx", 0)
+                .attr("dx", -10)
                 .attr("dy", ".35em")
-                .style("font-size", 2)
+                .style("font-size", 11)
                 .text(function (d) { return d.name });
 
             // Let's list the force we wanna apply on the network
