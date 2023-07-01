@@ -8,7 +8,7 @@
 <!-- Create a div for the header -->
 <div id="my_header" style="text-align: center;">
     <h1>Networks Graph for Top 100 BoardGames from BoardGameGeek.xom</h1>
-<!--     <p>Legenda:</p>
+    <!--     <p>Legenda:</p>
     <ul style="list-style: none; text-align: left;">
         <li><span style="color: #ffffb2;">●</span> 0-5 collegamenti</li>
         <li><span style="color: #fecc5c;">●</span> 6-10 collegamenti</li>
@@ -43,7 +43,15 @@
                 `translate(${margin.left}, ${margin.top})`);
 
 
+        function highlightNode(node) {
+            // Colora il nodo passato come parametro
+            d3.select(node).style("fill", "red");
 
+            // Colora tutti i nodi collegati
+            d3.selectAll(".link")
+                .filter(function (d) { return d.source === node || d.target === node; })
+                .style("stroke", "red");
+        }
 
         d3.json("output.json").then(function (data) {
 
@@ -61,7 +69,7 @@
             svg.append("defs").append("marker")
                 .attr("id", "arrow")
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 25)
+                .attr("refX", 21.5)
                 .attr("refY", 0)
                 .attr("markerWidth", 10)
                 .attr("markerHeight", 13)
@@ -74,7 +82,7 @@
             svg.append("defs").append("marker")
                 .attr("id", "arrow-red")
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 25)
+                .attr("refX", 21.5)
                 .attr("refY", 0)
                 .attr("markerWidth", 10)
                 .attr("markerHeight", 13)
@@ -115,12 +123,18 @@
                 .attr("id", d => `pattern-${d.id}`)
                 .attr("width", 1)
                 .attr("height", 1)
-                .append("image")
+
+            patterns.append("rect")
+                .attr("width", 70)
+                .attr("height", 70)
+                .attr("fill", "#FFFFFF");
+
+            patterns.append("image")
                 .attr("xlink:href", d => d.image)
                 .attr("width", 100)
                 .attr("height", 100)
-                .attr("x", -12.5)
-                .attr("y", -23);
+                .attr("x", d => -d.radius)
+                .attr("y", d => -d.radius);
 
             // Initialize the nodes
             const node = svg
@@ -128,16 +142,10 @@
                 .data(data.nodes)
                 .join("circle")
                 .attr("r", 35)
+                .style("stroke", "white")
+                .style("stroke-width", 2)
+                .style("fill", "#FFFFFF")
                 .style("fill", d => `url(#pattern-${d.id})`)
-                /* .style("fill", function (d) {
-                    // Get number of links for this node
-                    const numLinks = data.links.filter(link => link.source == d.id || link.target == d.id).length;
-                    // Set fill color based on number of links
-                    return colorScale(numLinks)
-                }) */
-                .attr("xlink:href", function (d) {
-                    return d.image;
-                })
                 .on("click", function (event, d) {
                     // Find connected nodes
                     const connectedNodes = nodeMap[d.id];
@@ -159,39 +167,45 @@
                     console.log("ao" + connectedNodes)
                     d3.select(event.currentTarget)
                         .transition()
-                        .duration(2000)
+                        .duration(200)
                         .style("stroke", "red")
-                        .style("stroke-width", 2);
+                        .style("stroke-width", 30);
                     tip.style("opacity", 1)
                         .html('<br> Selected Game: ' + "<span style='color:green'>" + d.name + "</span>" +
                             '<br> Related games: <br>' + connectedNodes.join(" - \n "))
                         .style("top", (mouseY + 50) + "px");
                     link.filter(function (l) {
                         return l.source === d || l.target === d;
-                    }).transition().duration(200).style("stroke", "red")
-                        .attr("marker-end", "url(#arrow-red)");
+                    }).transition().duration(200).style("stroke", "red").style("stroke-width", "3")
+                        .attr("marker-end", "url(#arrow-red)")
+                    node.filter(function (n) {
+                        console.log(connectedNodes)
+                        return connectedNodes.includes(n.name);
+                    }).transition().duration(200).style("stroke", "blue").style("stroke-width", "3")
 
                 })
                 .on("mouseout", (event, d) => {
                     tip.style("opacity", 0);
+                    const connectedNodes = nodeMap[d.id];
                     d3.select(event.currentTarget)
                         .transition()
                         .duration(2000)
-                        .style("stroke", "none");
+                        .delay(1000).style("stroke", "none");
                     link.filter(function (l) {
                         return l.source === d || l.target === d;
-                    }).transition().duration(2000).style("stroke", "#999")
-                        .attr("marker-end", "url(#arrow)");
-                });
-
-            node.append("svg:image")
-                .attr("xlink:href", function (d) {
-                    return d.image;
+                    }).transition().duration(2000).style("stroke", "#999").style("stroke-width", null)
+                    link.filter(function (l) {
+                        return l.source === d || l.target === d;
+                    }).transition().delay(2000).duration(2000).attr("marker-end", "url(#arrow)")
+                    node.filter(function (n) {
+                        console.log(connectedNodes)
+                        return connectedNodes.includes(n.name);
+                    }).transition().delay(1100).style("stroke", "none").style("stroke-width",null);
                 })
-                .attr("x", -25)
-                .attr("y", -25)
-                .attr("width", 50)
-                .attr("height", 50);
+
+
+
+
 
             // Add labels to the nodes
             const label = svg
@@ -206,10 +220,11 @@
             // Let's list the force we wanna apply on the network
             const simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
                 .force("link", d3.forceLink()                               // This force provides links between nodes
-                    .id(function (d) { return d.id; })                     // This provide  the id of a node
+                    .id(function (d) { return d.id; })                    // This provide  the id of a node
+                    .distance(600)
                     .links(data.links)                                    // and this the list of links
                 )
-                .force("charge", d3.forceManyBody().strength(-4000))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+                .force("charge", d3.forceManyBody().strength(-5000))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
                 .force("center", d3.forceCenter(width / 2, height / 2))     // This force attracts nodes to the center of the svg area
                 .on("end", ticked);
 
