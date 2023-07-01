@@ -8,14 +8,14 @@
 <!-- Create a div for the header -->
 <div id="my_header" style="text-align: center;">
     <h1>Networks Graph for Top 100 BoardGames from BoardGameGeek.xom</h1>
-    <p>Legenda:</p>
+<!--     <p>Legenda:</p>
     <ul style="list-style: none; text-align: left;">
         <li><span style="color: #ffffb2;">●</span> 0-5 collegamenti</li>
         <li><span style="color: #fecc5c;">●</span> 6-10 collegamenti</li>
         <li><span style="color: #fd8d3c;">●</span> 11-15 collegamenti</li>
         <li><span style="color: #f03b20;">●</span> 16-20 collegamenti</li>
         <li><span style="color: #bd0026;">●</span> 21+ collegamenti</li>
-    </ul>
+    </ul> -->
 </div>
 
 <!-- Create a div where the graph will take place -->
@@ -127,9 +127,8 @@
                 .selectAll("circle")
                 .data(data.nodes)
                 .join("circle")
-                .attr("r", 25)
+                .attr("r", 35)
                 .style("fill", d => `url(#pattern-${d.id})`)
-                .attr("r", 20)
                 /* .style("fill", function (d) {
                     // Get number of links for this node
                     const numLinks = data.links.filter(link => link.source == d.id || link.target == d.id).length;
