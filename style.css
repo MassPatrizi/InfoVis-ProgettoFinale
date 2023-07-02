@@ -11,8 +11,8 @@ html{
     width: 300px;
     padding: 10px;
     border-radius: 10px;
-    background: #363636;
-    color: #fff;
+    background: #9797977c;
+    color: #000000;
     text-align: center;
     opacity: 0;
     transition: .3s opacity;
