@@ -11,9 +11,12 @@ html{
     width: 300px;
     padding: 10px;
     border-radius: 10px;
-    background: #9797977c;
+    background: #ffffff88;
     color: #000000;
     text-align: center;
     opacity: 0;
     transition: .3s opacity;
+}
+#popup{
+    border-radius: 20px;
 }
