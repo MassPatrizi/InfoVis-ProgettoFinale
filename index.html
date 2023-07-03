@@ -14,10 +14,12 @@
         <img id="backgroundImage" src="background.png" alt="Immagine di sfondo" />
         <h1>Networks Graph for Top 100 BoardGames from BoardGameGeek.com</h1>
         <h3>
-           <!--  Hove over a game to highlight its connection (which means that players
+            <!--  Hove over a game to highlight its connection (which means that players
             of the one game also like the other game). Click to display all the
             information about that game. -->
-            <button id="returnButton" style="font-size: large; padding: 10px 20px;stroke: black; stroke-width: 30px ; border-radius: 5px; background-color: lightblue; color: rgb(0, 0, 0);">Home Page</button>
+            <button id="returnButton"
+                style="font-size: large; padding: 10px 20px;stroke: black; stroke-width: 30px ; border-radius: 5px; background-color: lightblue; color: rgb(0, 0, 0);">Home
+                Page</button>
         </h3>
 
     </div>
@@ -38,15 +40,22 @@
         </p>
         <p class="large">Click on a game to show a popup containing all the info about that game</p>
         <div style="display: flex; justify-content: center;">
-            <img src="popup1.png" style="width: 200px; margin-right: 10px;border-radius: 5px;" />
-            <img src="popup2.png" style="width: 200px;border-radius: 5px;" />
-
+            <img src="popup1.png" style="width: 200px; margin-right: 10px; border-radius: 5px;"
+                onclick="showPopupImage(this)" />
+            <div class="overlay" onclick="hidePopupImage()">
+                <img src="" />
+            </div>
+            <img src="popup2.png" style="width: 200px;border-radius: 5px;"onclick="showPopupImage(this)"/>
+            <div class="overlay" onclick="hidePopupImage()">
+              <img src="" />
+            </div>
         </div>
 
-        <button id="startButton" style="font-size: large; padding: 10px 20px;stroke: black; stroke-width: 30px ; border-radius: 5px; background-color: lightblue; color: rgb(0, 0, 0); cursor: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'  width=\'40\' height=\'48\' viewport=\'0 0 100 100\' style=\'fill:black;font-size:24px;\'><text y=\'50%\'>🚀</text></svg>') 16 0, auto;">
+        <button id="startButton"
+            style="font-size: large; padding: 10px 20px;stroke: black; stroke-width: 30px ; border-radius: 5px; background-color: lightblue; color: rgb(0, 0, 0); cursor: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'  width=\'40\' height=\'48\' viewport=\'0 0 100 100\' style=\'fill:black;font-size:24px;\'><text y=\'50%\'>🚀</text></svg>') 16 0, auto;">
             Start exploring!
-          </button>
-          
+        </button>
+
     </div>
 
 

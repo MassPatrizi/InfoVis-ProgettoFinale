@@ -19,6 +19,16 @@ d3.select("#startButton").on("click", function () {
         .transition().duration(1200).style("opacity", 1);
 });
 
+
+function showPopupImage(img) {
+    document.querySelector(".overlay img").src = img.src;
+    document.querySelector(".overlay").style.display = "flex";
+}
+function hidePopupImage() {
+    document.querySelector(".overlay").style.display = "none";
+}
+
+
 d3.select("#returnButton").on("click", function () {
     setTimeout(function () {
         d3.select("#introduction").style("display", "block")
