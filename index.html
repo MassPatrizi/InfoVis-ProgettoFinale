@@ -5,11 +5,18 @@
 <script src="https://d3js.org/d3.v6.js"></script>
 <link rel="stylesheet" href="style.css">
 
-<!-- Create a div for the header -->
+<title>Top 100 BG Graph</title>
+<head>
 <div id="my_header" style="text-align: center;">
-    <h1>Networks Graph for Top 100 BoardGames from BoardGameGeek.xom</h1>
+    <img
+        id="backgroundImage"
+        src="background.png"
+        alt="Immagine di sfondo"
+      />
+    <h1>Networks Graph for Top 100 BoardGames from BoardGameGeek.com</h1>
     <h3>Hove over a game to highlight its connection (which means that players of the one game also like the other
         game). Click to display all the information about that game.</h3>
+        <button id="returnButton">Home Page</button>
     <!--     <p>Legenda:</p>
     <ul style="list-style: none; text-align: left;">
         <li><span style="color: #ffffb2;">●</span> 0-5 collegamenti</li>
@@ -20,20 +27,38 @@
     </ul> -->
 </div>
 
-<!-- Create a div where the graph will take place -->
-<div id="data"></div>
 
+<div id="introduction" style="text-align: center;">
+    <h1>Welcome!</h1>
+    <p>Here are some instructions on how to navigate the graph:</p>
+    <p>Hove over a game-node to show a brief description of that game</p>
+    <p>Click on a game to show a popup containing all the info about that game</p>
+    <button id="startButton">Inizia a esplorare</button>
+</div>
+<div id="graph" style="display: none;">
+</div>
 
+</head>
 <body>
     <script>
+        d3.select("#startButton").on("click", function () {
+            d3.select("#introduction").style("display", "none");
+            d3.select("#graph").style("display", "block");
+            d3.select("#backgroundImage").style("display","none")
+        });
 
+        d3.select("#returnButton").on("click", function () {
+            d3.select("#introduction").style("display", "block");
+            d3.select("#graph").style("display", "none");
+            d3.select("#backgroundImage").style("display","block")
+        });
         // Dimensioni della finestra
         const margin = { top: 10, right: 30, bottom: 30, left: 40 },
             width = window.innerWidth - margin.left - margin.right,
             height = window.innerHeight - margin.top - margin.bottom;
 
         // Crea l'svg
-        const svg = d3.select("#data")
+        const svg = d3.select("#graph")
             .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -95,7 +120,7 @@
                 .attr("d", "M0,-3L10,0L0,3")
                 .style("fill", "red");
 
-                // Freccia rossa 
+            // Freccia rossa 
             svg.append("defs").append("marker")
                 .attr("id", "arrow-blue")
                 .attr("viewBox", "0 -5 10 10")
@@ -108,7 +133,7 @@
                 .attr("d", "M0,-3L10,0L0,3")
                 .style("fill", "blue");
 
-                // Freccia rossa 
+            // Freccia rossa 
             svg.append("defs").append("marker")
                 .attr("id", "arrow-green")
                 .attr("viewBox", "0 -5 10 10")
@@ -292,7 +317,7 @@
                     link.filter(function (l) {
                         return l.source === d || l.target === d;
                     }).transition().duration(200).style("stroke", function (l) { return linkColor(l); }).style("stroke-width", "3")
-                    .attr("marker-end", function(l) { return arrowColor(l); })
+                        .attr("marker-end", function (l) { return arrowColor(l); })
                     node.filter(function (n) {
                         console.log(connectedNodes)
                         return connectedNodes.includes(n.name);
