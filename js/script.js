@@ -1,15 +1,39 @@
 d3.select("#startButton").on("click", function () {
-    d3.select("#introduction").style("display", "none");
-    d3.select("#graph").style("display", "block");
-    d3.select("#backgroundImage").style("display", "none")
-    d3.select("#returnButton").style("display", "block");
-
+    d3.select("#introduction")
+            .style("opacity", 1)
+            .transition().duration(400).style("opacity", 0);
+    d3.select("#backgroundImage")
+            .style("opacity", 1)
+            .transition().duration(400).style("opacity", 0);
+    setTimeout(function () {
+        d3.select("#introduction").style("display", "none")
+        d3.select("#backgroundImage").style("display", "none")
+    }, 400);
+    setTimeout(function () {
+        d3.select("#graph").style("display", "block")
+            .style("opacity", 0)
+            .transition().duration(1200).style("opacity", 1);
+    }, 400);
+    
+    d3.select("#returnButton").style("display", "block").style("opacity", 0)
+    .transition().duration(1200).style("opacity", 1);
 });
 
 d3.select("#returnButton").on("click", function () {
-    d3.select("#introduction").style("display", "block");
-    d3.select("#graph").style("display", "none");
-    d3.select("#backgroundImage").style("display", "block")
+    setTimeout(function () {
+        d3.select("#introduction").style("display", "block")
+            .style("opacity", 0)
+            .transition().duration(400).style("opacity", 1);
+        d3.select("#backgroundImage").style("display", "block")
+            .style("opacity", 0)
+            .transition().duration(400).style("opacity", 1); 
+    }, 400);
+
+
+    //d3.select("#graph").style("display", "none")
+    d3.select("#graph")
+        .style("opacity", 1)
+        .transition().duration(400).style("opacity", 0);
     d3.select("#returnButton").style("display", "none");
 });
 // Dimensioni della finestra
@@ -222,10 +246,10 @@ d3.json("output.json").then(function (data) {
 
             // Crea la seconda pagina del popup
             const page2 = popup.append("div").attr("id", "page2").style("display", "none");
-            page2.append("h3").text("Users who liked this game also liked");
+            page2.append("h3").text("Players of this game also liked");
             //page2.append("img").attr("src", d.image).style("display", "block").style("margin", "auto")
             const connectedNodes = nodeMap[d.id];
-            page2.append("p").text(connectedNodes.join(" || "));
+            page2.append("pre").text(connectedNodes.join("\n"));
 
             // Aggiungi un pulsante di chiusura al popup
             popup.append("button")
