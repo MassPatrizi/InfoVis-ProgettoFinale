@@ -8,7 +8,8 @@
 <!-- Create a div for the header -->
 <div id="my_header" style="text-align: center;">
     <h1>Networks Graph for Top 100 BoardGames from BoardGameGeek.xom</h1>
-    <h3>Hove over a game to highlight its connection. Click to display all the information about that game.</h3>
+    <h3>Hove over a game to highlight its connection (which means that players of the one game also like the other
+        game). Click to display all the information about that game.</h3>
     <!--     <p>Legenda:</p>
     <ul style="list-style: none; text-align: left;">
         <li><span style="color: #ffffb2;">●</span> 0-5 collegamenti</li>
@@ -43,16 +44,16 @@
             .attr("transform",
                 `translate(${margin.left}, ${margin.top})`);
 
-/* 
-        function highlightNode(node) {
-            // Colora il nodo passato come parametro
-            d3.select(node).style("fill", "red");
-
-            // Colora tutti i nodi collegati
-            d3.selectAll(".link")
-                .filter(function (d) { return d.source === node || d.target === node; })
-                .style("stroke", "red");
-        } */
+        /* 
+                function highlightNode(node) {
+                    // Colora il nodo passato come parametro
+                    d3.select(node).style("fill", "red");
+        
+                    // Colora tutti i nodi collegati
+                    d3.selectAll(".link")
+                        .filter(function (d) { return d.source === node || d.target === node; })
+                        .style("stroke", "red");
+                } */
 
         // Carica i dati dal dataset formattato
         d3.json("output.json").then(function (data) {
@@ -66,7 +67,7 @@
                     .map(node => node.name);
                 nodeMap[node.id] = connectedNodeNames;
             });
-
+            let currentNode;
 
             // Rappresentazione della freccia per indicare il verso del collegamento
             svg.append("defs").append("marker")
@@ -78,7 +79,7 @@
                 .attr("markerHeight", 13)
                 .attr("orient", "auto")
                 .append("path")
-                .attr("d", "M0,-5L10,0L0,5")
+                .attr("d", "M0,-3L10,0L0,3")
                 .style("fill", "#9999");
 
             // Freccia rossa 
@@ -91,9 +92,46 @@
                 .attr("markerHeight", 13)
                 .attr("orient", "auto")
                 .append("path")
-                .attr("d", "M0,-5L10,0L0,5")
+                .attr("d", "M0,-3L10,0L0,3")
                 .style("fill", "red");
 
+                // Freccia rossa 
+            svg.append("defs").append("marker")
+                .attr("id", "arrow-blue")
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 21.5)
+                .attr("refY", 0)
+                .attr("markerWidth", 10)
+                .attr("markerHeight", 13)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M0,-3L10,0L0,3")
+                .style("fill", "blue");
+
+                // Freccia rossa 
+            svg.append("defs").append("marker")
+                .attr("id", "arrow-green")
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 21.5)
+                .attr("refY", 0)
+                .attr("markerWidth", 10)
+                .attr("markerHeight", 13)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M0,-3L10,0L0,3")
+                .style("fill", "green");
+
+            svg.append("defs").append("marker")
+                .attr("id", "arrow-black")
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 21.5)
+                .attr("refY", 0)
+                .attr("markerWidth", 10)
+                .attr("markerHeight", 13)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M0,-3L10,0L0,3")
+                .style("fill", "black");
 
             // Inizializza i link
             const link = svg
@@ -202,7 +240,7 @@
                     page2.append("h3").text("Users who liked this game also liked");
                     //page2.append("img").attr("src", d.image).style("display", "block").style("margin", "auto")
                     const connectedNodes = nodeMap[d.id];
-                    page2.append("p").text( connectedNodes.join(" || "));
+                    page2.append("p").text(connectedNodes.join(" || "));
 
                     // Aggiungi un pulsante di chiusura al popup
                     popup.append("button")
@@ -239,7 +277,8 @@
                     var mouseX = event.clientX;
                     var mouseY = event.clientY;
                     const connectedNodes = nodeMap[d.id];
-
+                    currentNode = d;
+                    console.log(linkColor(d))
                     // Colora i collegamenti del nodo ed i contorni dei nodi collegati
                     d3.select(event.currentTarget)
                         .transition()
@@ -252,12 +291,12 @@
                         .style("top", (mouseY + 50) + "px");
                     link.filter(function (l) {
                         return l.source === d || l.target === d;
-                    }).transition().duration(200).style("stroke", "red").style("stroke-width", "3")
-                        .attr("marker-end", "url(#arrow-red)")
+                    }).transition().duration(200).style("stroke", function (l) { return linkColor(l); }).style("stroke-width", "3")
+                    .attr("marker-end", function(l) { return arrowColor(l); })
                     node.filter(function (n) {
                         console.log(connectedNodes)
                         return connectedNodes.includes(n.name);
-                    }).transition().duration(200).style("stroke", "blue").style("stroke-width", "8")
+                    }).transition().duration(200).style("stroke", function (n) { return linkColor(n); }).style("stroke-width", "8")
 
                 })
                 .on("mouseout", (event, d) => {
@@ -282,7 +321,7 @@
 
             // Chiudi il popup quando si clicca al di fuori del popup
             d3.select(document).on("click", function (event) {
-                if (event.target.id !== "popup" && event.target.tagName !== "circle" && event.target.id !== "page1" &&event.target.id !== "page2" && event.target.tagName !== "BUTTON") {
+                if (event.target.id !== "popup" && event.target.tagName !== "circle" && event.target.id !== "page1" && event.target.id !== "page2" && event.target.tagName !== "BUTTON") {
                     d3.select("#popup").remove();
                 }
             });
@@ -326,6 +365,33 @@
                     .attr("x", function (d) { return d.x; })
                     .attr("y", function (d) { return d.y; });
 
+            }
+
+            function linkColor(d) {
+                console.log("source:", d.source);
+                console.log("target:", d.target);
+                console.log("currentNode:", currentNode);
+                if (d.source === currentNode) {
+                    return "red";
+                } else if (d.target === currentNode) {
+                    return "blue";
+                } else if (d.source === currentNode && d.target === currentNode) {
+                    return "green";
+                } else {
+                    return "black";
+                }
+            }
+
+            function arrowColor(d) {
+                if (d.source === currentNode) {
+                    return "url(#arrow-red)";
+                } else if (d.target === currentNode) {
+                    return "url(#arrow-blue)";
+                } else if (d.source === currentNode && d.target === currentNode) {
+                    return "url(#arrow-green)";
+                } else {
+                    return "url(#arrow-black)";
+                }
             }
         });
     </script>

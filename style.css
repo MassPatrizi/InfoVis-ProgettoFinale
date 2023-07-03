@@ -20,3 +20,15 @@ html{
 #popup{
     border-radius: 20px;
 }
+
+line.source {
+    stroke: red;
+}
+
+line.target {
+    stroke: blue;
+}
+
+line.both {
+    stroke: purple;
+}
