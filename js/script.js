@@ -1,10 +1,10 @@
 d3.select("#startButton").on("click", function () {
     d3.select("#introduction")
-            .style("opacity", 1)
-            .transition().duration(400).style("opacity", 0);
+        .style("opacity", 1)
+        .transition().duration(400).style("opacity", 0);
     d3.select("#backgroundImage")
-            .style("opacity", 1)
-            .transition().duration(400).style("opacity", 0);
+        .style("opacity", 1)
+        .transition().duration(400).style("opacity", 0);
     setTimeout(function () {
         d3.select("#introduction").style("display", "none")
         d3.select("#backgroundImage").style("display", "none")
@@ -14,9 +14,9 @@ d3.select("#startButton").on("click", function () {
             .style("opacity", 0)
             .transition().duration(1200).style("opacity", 1);
     }, 400);
-    
+
     d3.select("#returnButton").style("display", "block").style("opacity", 0)
-    .transition().duration(1200).style("opacity", 1);
+        .transition().duration(1200).style("opacity", 1);
 });
 
 d3.select("#returnButton").on("click", function () {
@@ -26,7 +26,7 @@ d3.select("#returnButton").on("click", function () {
             .transition().duration(400).style("opacity", 1);
         d3.select("#backgroundImage").style("display", "block")
             .style("opacity", 0)
-            .transition().duration(400).style("opacity", 1); 
+            .transition().duration(400).style("opacity", 1);
     }, 400);
 
 
@@ -208,7 +208,7 @@ d3.json("output.json").then(function (data) {
                 .style("left", event.pageX + "px")
                 .style("top", event.pageY + "px")
                 .style("background-color", "white")
-                .style("border", "1px solid black")
+                .style("border", "1px solid blue")
                 .style("padding", "10px");
 
             // Titolo del popup
@@ -223,22 +223,21 @@ d3.json("output.json").then(function (data) {
                 const additionalInfo = additionalData.find(info => info.id === d.id);
                 // Aggiungi le informazioni aggiuntive al popup
                 if (additionalInfo) {
-                    page1.append("p").text(additionalInfo.description);
-                    page1.append("p").text("Year: " + additionalInfo.year);
-                    page1.append("p").text("Rank: " + additionalInfo.rank);
-                    page1.append("p").text("Min players: " + additionalInfo.minplayers);
-                    page1.append("p").text("Max players: " + additionalInfo.maxplayers);
-                    page1.append("p").text("Min playtime: " + additionalInfo.minplaytime + " min");
-                    page1.append("p").text("Max playtime: " + additionalInfo.maxplaytime + " min");
-                    page1.append("p").text("Min age: " + additionalInfo.minage);
+                    page1.append("pre").text("Year: " + additionalInfo.year);
+                    page1.append("pre").text("Rank: " + additionalInfo.rank);
+                    page1.append("pre").text("Min players: " + additionalInfo.minplayers);
+                    page1.append("pre").text("Max players: " + additionalInfo.maxplayers);
+                    page1.append("pre").text("Min playtime: " + additionalInfo.minplaytime + " min");
+                    page1.append("pre").text("Max playtime: " + additionalInfo.maxplaytime + " min");
+                    page1.append("pre").text("Min age: " + additionalInfo.minage);
                     if (additionalInfo.rating) {
-                        page1.append("p").text("Rating: " + additionalInfo.rating.rating);
-                        page1.append("p").text("Number of reviews: " + additionalInfo.rating.num_of_reviews);
+                        page1.append("pre").text("Rating: " + additionalInfo.rating.rating);
+                        page1.append("pre").text("Number of reviews: " + additionalInfo.rating.num_of_reviews);
                     }
                     if (additionalInfo.types && additionalInfo.types.categories) {
-                        page1.append("p").text("Categories: " + additionalInfo.types.categories.map(category => category.name).join(", "));
+                        page1.append("pre").text("Categories: " + additionalInfo.types.categories.map(category => category.name).join(", "));
                     }
-                    page1.append("p").text("Designer(s): " + additionalInfo.credit.designer.map(designer => designer.name).join(", "));
+                    page1.append("pre").text("Designer(s): " + additionalInfo.credit.designer.map(designer => designer.name).join(", "));
                 }
             });
             // Inserisci l'immagine di copertina
@@ -246,8 +245,8 @@ d3.json("output.json").then(function (data) {
 
             // Crea la seconda pagina del popup
             const page2 = popup.append("div").attr("id", "page2").style("display", "none");
+            page2.append("img").attr("src", d.image).style("display", "block").style("margin", "auto")
             page2.append("h3").text("Players of this game also liked");
-            //page2.append("img").attr("src", d.image).style("display", "block").style("margin", "auto")
             const connectedNodes = nodeMap[d.id];
             page2.append("pre").text(connectedNodes.join("\n"));
 
@@ -263,16 +262,26 @@ d3.json("output.json").then(function (data) {
                 });
 
             // Aggiungi le frecce di navigazione al popup
-            popup.append("button").text("<").on("click", function () {
-                // Mostra la prima pagina e nascondi la seconda pagina
-                page1.style("display", null);
-                page2.style("display", "none");
-            });
-            popup.append("button").text(">").on("click", function () {
-                // Mostra la seconda pagina e nascondi la prima pagina
-                page1.style("display", "none");
-                page2.style("display", null);
-            });
+            popup.append("button")
+                .text("<")
+                .style("position", "absolute")
+                .style("left", "50%")
+                .style("transform", "translateX(-120%)")
+                .on("click", function () {
+                    // Mostra la prima pagina e nascondi la seconda pagina
+                    page1.style("display", null);
+                    page2.style("display", "none");
+                });
+            popup.append("button")
+                .text(">")
+                .style("position", "absolute")
+                .style("left", "50%")
+                .style("transform", "translateX(20%)")
+                .on("click", function () {
+                    // Mostra la seconda pagina e nascondi la prima pagina
+                    page1.style("display", "none");
+                    page2.style("display", null);
+                });
         })
         .on("mousemove", function (event) {
             var mouseX = event.clientX;
@@ -383,9 +392,9 @@ d3.json("output.json").then(function (data) {
         if (d.source === currentNode) {
             return "red";
         } else if (d.target === currentNode) {
-            return "blue";
-        } else if (d.source === currentNode && d.target === currentNode) {
             return "green";
+        } else if (d.source === currentNode && d.target === currentNode) {
+            return "yellow";
         } else {
             return "black";
         }
