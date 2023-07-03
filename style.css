@@ -1,9 +1,11 @@
-ul{
-    padding-left:47%;
+ul {
+    padding-left: 47%;
 }
-html{
+
+html {
     background-color: rgba(131, 148, 174, 0.47);
 }
+
 .tooltip {
     position: absolute;
     pointer-events: none;
@@ -17,7 +19,8 @@ html{
     opacity: 0;
     transition: .3s opacity;
 }
-#popup{
+
+#popup {
     border-radius: 20px;
 }
 
@@ -41,4 +44,10 @@ line.both {
     height: 100%;
     z-index: -1;
     filter: blur(8px);
-  }
+}
+
+#returnButton {
+    position: absolute;
+    left: 50%;
+    display: none;
+}
