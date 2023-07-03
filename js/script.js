@@ -53,17 +53,6 @@ const svg = d3.select("#graph")
     .attr("transform",
         `translate(${margin.left}, ${margin.top})`);
 
-/* 
-        function highlightNode(node) {
-            // Colora il nodo passato come parametro
-            d3.select(node).style("fill", "red");
-
-            // Colora tutti i nodi collegati
-            d3.selectAll(".link")
-                .filter(function (d) { return d.source === node || d.target === node; })
-                .style("stroke", "red");
-        } */
-
 // Carica i dati dal dataset formattato
 d3.json("output.json").then(function (data) {
 
@@ -149,16 +138,6 @@ d3.json("output.json").then(function (data) {
         .join("line")
         .style("stroke", "#999")
         .attr("marker-end", "url(#arrow)");
-
-
-    /* // ELIMINABILE - l'idea iniziale è stata scartata
-    const colorScale = d3.scaleQuantize()
-        .domain([0, d3.max(data.nodes, function (d) {
-            // Get number of links for this node
-            return data.links.filter(link => link.source == d.id || link.target == d.id).length;
-        })])
-        .range(["#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"]); */
-
 
     // Definisci il tooltip
     var tip = d3.select("#data").append("div")
@@ -296,7 +275,7 @@ d3.json("output.json").then(function (data) {
             var mouseY = event.clientY;
             const connectedNodes = nodeMap[d.id];
             currentNode = d;
-            console.log(linkColor(d))
+            links = data.links;
             // Colora i collegamenti del nodo ed i contorni dei nodi collegati
             d3.select(event.currentTarget)
                 .transition()
@@ -307,14 +286,23 @@ d3.json("output.json").then(function (data) {
                 .html('<br> Selected Game: ' + "<span style='color:green'>" + d.name + "</span>" +
                     '<br> Related games: <br>' + connectedNodes.join(" ||\n "))
                 .style("top", (mouseY + 50) + "px");
-            link.filter(function (l) {
-                return l.source === d || l.target === d;
-            }).transition().duration(200).style("stroke", function (l) { return linkColor(l); }).style("stroke-width", "3")
-                .attr("marker-end", function (l) { return arrowColor(l); })
-            node.filter(function (n) {
-                console.log(connectedNodes)
-                return connectedNodes.includes(n.name);
-            }).transition().duration(200).style("stroke", function (n) { return linkColor(n); }).style("stroke-width", "8")
+            link
+                .filter(function (l) {
+                    return l.source === d || l.target === d;
+                })
+                .transition()
+                .duration(200)
+                .style("stroke", function (l) {
+                    return linkColor(l, links);
+                })
+                .style("stroke-width", "3")
+                .attr("marker-end", function (l) {
+                    return arrowColor(l);
+                });
+
+            /*             node.filter(function (n) {
+                            return connectedNodes.includes(n.name);
+                        }).transition().duration(200).style("stroke", function (n) { return linkColor(n); }).style("stroke-width", "8") */
 
         })
         .on("mouseout", (event, d) => {
@@ -331,7 +319,6 @@ d3.json("output.json").then(function (data) {
                 return l.source === d || l.target === d;
             }).transition().delay(2000).duration(2000).attr("marker-end", "url(#arrow)")
             node.filter(function (n) {
-                console.log(connectedNodes)
                 return connectedNodes.includes(n.name);
             }).transition().delay(1100).style("stroke", "none").style("stroke-width", null);
         })
@@ -385,20 +372,38 @@ d3.json("output.json").then(function (data) {
 
     }
 
-    function linkColor(d) {
-        console.log("source:", d.source);
-        console.log("target:", d.target);
-        console.log("currentNode:", currentNode);
-        if (d.source === currentNode) {
-            return "red";
-        } else if (d.target === currentNode) {
+    function linkColor(d, links) {
+        let isBidirectional = false;
+        links.forEach(link => {
+
+            if ((link.source.id === d.target.id && link.target.id === d.source.id)) {
+                links.forEach(link2 => {
+                    if (link2.source.id === d.source.id && link2.target.id === d.target.id) {
+                        isBidirectional = true
+                    }
+                })
+            }
+            else if (link.source.id === d.source.id && link.target.id === d.target.id) {
+                links.forEach(link2 => {
+                    if (link2.source.id === d.target.id && link2.target.id === d.source.id) {
+                        isBidirectional = true
+                    }
+                })
+            }
+        });
+
+        if (isBidirectional) {
+            return "orange";
+        } else if (d.source.id === currentNode.id) {
+            return "blue";
+        } else if (d.target.id === currentNode.id) {
             return "green";
-        } else if (d.source === currentNode && d.target === currentNode) {
-            return "yellow";
         } else {
             return "black";
         }
     }
+
+
 
     function arrowColor(d) {
         if (d.source === currentNode) {

@@ -14,21 +14,40 @@
         <img id="backgroundImage" src="background.png" alt="Immagine di sfondo" />
         <h1>Networks Graph for Top 100 BoardGames from BoardGameGeek.com</h1>
         <h3>
-            Hove over a game to highlight its connection (which means that players
+           <!--  Hove over a game to highlight its connection (which means that players
             of the one game also like the other game). Click to display all the
-            information about that game.
+            information about that game. -->
             <button id="returnButton">Home Page</button>
         </h3>
 
     </div>
 
-    <div id="introduction" style="text-align: center;">
-        <h1>Welcome!</h1>
-        <p>Here are some instructions on how to navigate the graph:</p>
-        <p>Hove over a game-node to show a brief description of that game</p>
-        <p>Click on a game to show a popup containing all the info about that game</p>
-        <button id="startButton">Inizia a esplorare</button>
+    <div id="introduction" style="text-align: center; font-size:20px">
+        <p class="large">Here are some instructions on how to navigate the graph:</p>
+        <p class="large">
+            Hove over a game-node to show a brief description of that game and the type
+            of relation that he has with other games:
+        </p>
+        <p style="text-align: left; display: inline-block; font-size:25px">
+            An <span style="background-color: orange;"><strong>orange link </strong></span>means that players of that
+            game liked the other one, and viceversa.<br />
+            A <span style="background-color: blue; color: white;">blue link </span> means that only the players of
+            the selected game liked the other one.<br />
+            A <span style="background-color: green">green link </span> means that the game is liked
+            by the other game's players.
+        </p>
+        <p class="large">Click on a game to show a popup containing all the info about that game</p>
+        <div style="display: flex; justify-content: center;">
+            <img src="popup1.png" style="width: 200px; margin-right: 10px;border-radius: 5px;" />
+            <img src="popup2.png" style="width: 200px;border-radius: 5px;" />
+
+        </div>
+
+        <button id="startButton" style="font-size: large;">Start exploring!</button>
     </div>
+
+
+
 
     <div id="graph" style="display: none;"></div>
 

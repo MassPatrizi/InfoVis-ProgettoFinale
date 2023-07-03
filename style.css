@@ -6,6 +6,11 @@ html {
     background-color: rgba(131, 148, 174, 0.47);
 }
 
+
+p.large {
+    font-size: 25px;
+}
+
 .tooltip {
     position: absolute;
     pointer-events: none;
