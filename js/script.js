@@ -77,69 +77,69 @@ d3.json("output.json").then(function (data) {
     });
     let currentNode;
 
-    // Rappresentazione della freccia per indicare il verso del collegamento
-    svg.append("defs").append("marker")
-        .attr("id", "arrow")
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 21.5)
-        .attr("refY", 0)
-        .attr("markerWidth", 10)
-        .attr("markerHeight", 13)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M0,-3L10,0L0,3")
-        .style("fill", "#9999");
-
-    // Freccia rossa 
-    svg.append("defs").append("marker")
-        .attr("id", "arrow-red")
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 21.5)
-        .attr("refY", 0)
-        .attr("markerWidth", 10)
-        .attr("markerHeight", 13)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M0,-3L10,0L0,3")
-        .style("fill", "red");
-
-    // Freccia rossa 
-    svg.append("defs").append("marker")
-        .attr("id", "arrow-blue")
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 21.5)
-        .attr("refY", 0)
-        .attr("markerWidth", 10)
-        .attr("markerHeight", 13)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M0,-3L10,0L0,3")
-        .style("fill", "blue");
-
-    // Freccia rossa 
-    svg.append("defs").append("marker")
-        .attr("id", "arrow-green")
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 21.5)
-        .attr("refY", 0)
-        .attr("markerWidth", 10)
-        .attr("markerHeight", 13)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M0,-3L10,0L0,3")
-        .style("fill", "green");
-
-    svg.append("defs").append("marker")
-        .attr("id", "arrow-black")
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 21.5)
-        .attr("refY", 0)
-        .attr("markerWidth", 10)
-        .attr("markerHeight", 13)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M0,-3L10,0L0,3")
-        .style("fill", "black");
+    /*    // Rappresentazione della freccia per indicare il verso del collegamento
+       svg.append("defs").append("marker")
+           .attr("id", "arrow")
+           .attr("viewBox", "0 -5 10 10")
+           .attr("refX", 21.5)
+           .attr("refY", 0)
+           .attr("markerWidth", 10)
+           .attr("markerHeight", 13)
+           .attr("orient", "auto")
+           .append("path")
+           .attr("d", "M0,-3L10,0L0,3")
+           .style("fill", "#9999");
+   
+       // Freccia rossa 
+       svg.append("defs").append("marker")
+           .attr("id", "arrow-red")
+           .attr("viewBox", "0 -5 10 10")
+           .attr("refX", 21.5)
+           .attr("refY", 0)
+           .attr("markerWidth", 10)
+           .attr("markerHeight", 13)
+           .attr("orient", "auto")
+           .append("path")
+           .attr("d", "M0,-3L10,0L0,3")
+           .style("fill", "red");
+   
+       // Freccia rossa 
+       svg.append("defs").append("marker")
+           .attr("id", "arrow-blue")
+           .attr("viewBox", "0 -5 10 10")
+           .attr("refX", 21.5)
+           .attr("refY", 0)
+           .attr("markerWidth", 10)
+           .attr("markerHeight", 13)
+           .attr("orient", "auto")
+           .append("path")
+           .attr("d", "M0,-3L10,0L0,3")
+           .style("fill", "blue");
+   
+       // Freccia rossa 
+       svg.append("defs").append("marker")
+           .attr("id", "arrow-green")
+           .attr("viewBox", "0 -5 10 10")
+           .attr("refX", 21.5)
+           .attr("refY", 0)
+           .attr("markerWidth", 10)
+           .attr("markerHeight", 13)
+           .attr("orient", "auto")
+           .append("path")
+           .attr("d", "M0,-3L10,0L0,3")
+           .style("fill", "green");
+   
+       svg.append("defs").append("marker")
+           .attr("id", "arrow-black")
+           .attr("viewBox", "0 -5 10 10")
+           .attr("refX", 21.5)
+           .attr("refY", 0)
+           .attr("markerWidth", 10)
+           .attr("markerHeight", 13)
+           .attr("orient", "auto")
+           .append("path")
+           .attr("d", "M0,-3L10,0L0,3")
+           .style("fill", "black"); */
 
     // Inizializza i link
     const link = svg
@@ -150,7 +150,7 @@ d3.json("output.json").then(function (data) {
         .attr("marker-end", "url(#arrow)");
 
     // Definisci il tooltip
-    var tip = d3.select("#data").append("div")
+    var tip = d3.select("#graph").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
 
@@ -169,9 +169,9 @@ d3.json("output.json").then(function (data) {
         .attr("fill", "#FFFFFF");
 
     patterns.append("image")
-        .attr("xlink:href", d => d.image)
-        .attr("width", 100)
-        .attr("height", 100)
+        .attr("xlink:href", d => d.thumbnail)
+        .attr("width", 310)
+        .attr("height", 310)
         .attr("x", d => -d.radius)
         .attr("y", d => -d.radius);
 
@@ -180,7 +180,7 @@ d3.json("output.json").then(function (data) {
         .selectAll("circle")
         .data(data.nodes)
         .join("circle")
-        .attr("r", 35)
+        .attr("r", 155)
         .style("stroke", "white")
         .style("stroke-width", 2)
         .style("fill", "#FFFFFF")
@@ -305,14 +305,14 @@ d3.json("output.json").then(function (data) {
                 .style("stroke", function (l) {
                     return linkColor(l, links);
                 })
-                .style("stroke-width", "3")
+                .style("stroke-width", "15")
                 .attr("marker-end", function (l) {
                     return arrowColor(l);
                 });
 
-            /*             node.filter(function (n) {
+            node.filter(function (n) {
                             return connectedNodes.includes(n.name);
-                        }).transition().duration(200).style("stroke", function (n) { return linkColor(n); }).style("stroke-width", "8") */
+            }).transition().duration(200).style("stroke", "white" ).style("stroke-width", "8")
 
         })
         .on("mouseout", (event, d) => {
@@ -343,7 +343,7 @@ d3.json("output.json").then(function (data) {
 
 
 
-    // Aggiungi i label ai nodi
+    /* // Aggiungi i label ai nodi
     const label = svg
         .selectAll("text")
         .data(data.nodes)
@@ -351,7 +351,7 @@ d3.json("output.json").then(function (data) {
         .attr("dx", -40)
         .attr("dy", 50)
         .style("font-size", 11)
-        .text(function (d) { return d.name });
+        .text(function (d) { return d.name }); */
 
     // Inizializzazione delle forze per la generazione dei nodi
     const simulation = d3.forceSimulation(data.nodes)
@@ -360,7 +360,7 @@ d3.json("output.json").then(function (data) {
             .distance(600)
             .links(data.links)
         )
-        .force("charge", d3.forceManyBody().strength(-5000))
+        .force("charge", d3.forceManyBody().strength(-30000))
         .force("center", d3.forceCenter(width / 2, height / 2))
         .on("end", ticked);
 
@@ -413,8 +413,29 @@ d3.json("output.json").then(function (data) {
         }
     }
 
+    /* function bestMatches(){
+        links = data.links;
+        const matches = new Map();
+        links.forEach(link => {
 
-
+            if ((link.source.id === d.target.id && link.target.id === d.source.id)) {
+                links.forEach(link2 => {
+                    if (link2.source.id === d.source.id && link2.target.id === d.target.id) {
+                        matches.set(link.id, link2.id)
+                    }
+                })
+            }
+            else if (link.source.id === d.source.id && link.target.id === d.target.id) {
+                links.forEach(link2 => {
+                    if (link2.source.id === d.target.id && link2.target.id === d.source.id) {
+                        matches.set(link.id, link2.id)
+                    }
+                })
+            }
+        });
+        return matches;
+    }
+     */
     function arrowColor(d) {
         if (d.source === currentNode) {
             return "url(#arrow-red)";
