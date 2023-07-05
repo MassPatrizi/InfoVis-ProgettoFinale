@@ -83,8 +83,8 @@ const svg = d3.select("#graph")
         `translate(${margin.left}, ${margin.top})`);
 
 // Carica i dati dal dataset formattato
-d3.json("top40-dataset.json").then(function (data) {
-//d3.json("top100-dataset.json").then(function (data) {
+//d3.json("top40-dataset.json").then(function (data) {
+d3.json("top100-dataset.json").then(function (data) {
 
     // Dizionario per salvare le connessioni di ogni nodo
     const nodeMap = {};
