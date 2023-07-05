@@ -262,7 +262,7 @@ d3.json("output.json").then(function (data) {
             // Crea la seconda pagina del popup
             const page2 = popup.append("div").attr("id", "page2").style("display", "none");
             page2.append("img").attr("src", d.image).style("display", "block").style("margin", "auto")
-            page2.append("h3").text("Players of this game also liked");
+            page2.append("h3").text("Related games based on players' reviews");
             const connectedNodes = nodeMap[d.id];
             page2.append("pre").text(connectedNodes.join("\n"));
 
@@ -320,12 +320,21 @@ d3.json("output.json").then(function (data) {
                 .style("stroke-width", 20)
                 .style("stroke", "red")
 
-            tip.append("img").attr("src", d.image).style("display", "block").style("margin", "auto")
-
             tip.style("opacity", 1)
-                .html('<br> Selected Game: ' + "<span style='color:green'>" + d.name + "</span>" +
-                    '<br> Related games: <br>' + connectedNodes.join(" ||\n "))
+                .html("<span style='font-size:28px'><strong>" + d.name+ "</span>")
                 .style("top", (mouseY + 50) + "px");
+
+            tip.append("img")
+                .attr("src", d.image)
+                .attr("width", 200)
+                .attr("height", 200)
+                .style("display", "block")
+                .style("margin", "auto")
+                
+            tip.append("p")
+                .html('Click on the node to show full information about <strong>'
+                    +d.name+'</strong>')
+
             link
                 .filter(function (l) {
                     return l.source === d || l.target === d;
@@ -336,7 +345,7 @@ d3.json("output.json").then(function (data) {
                     return linkColor(l, links);
                 })
                 .style("stroke-width", "18")
-                .style("opacity",1)
+                .style("opacity", 1)
                 .attr("marker-end", function (l) {
                     return arrowColor(l);
                 });
@@ -347,23 +356,24 @@ d3.json("output.json").then(function (data) {
 
         })
         .on("mouseout", (event, d) => {
-            tip.style("opacity", 0);
+            tip.style("opacity", 0)
+                .html("")
             const connectedNodes = nodeMap[d.id];
             d3.select(event.currentTarget)
                 .transition()
                 .duration(2000)
                 .delay(1000).style("stroke", "black")
                 .style("stroke-width", 2);
-                link.filter(function(l) {
-                    return l.source === d || l.target === d;
-                }).transition().duration(2000).style("opacity", function(l) {
-                    if (linkColor(l, data.links) === "red") {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }).style("stroke-width", null);
-                
+            link.filter(function (l) {
+                return l.source === d || l.target === d;
+            }).transition().duration(2000).style("opacity", function (l) {
+                if (linkColor(l, data.links) === "red") {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }).style("stroke-width", null);
+
             link.filter(function (l) {
                 return l.source === d || l.target === d;
             }).transition().delay(2000).duration(2000).attr("marker-end", "url(#arrow)")
