@@ -172,7 +172,7 @@ d3.json("output.json").then(function (data) {
         .data(data.links)
         .enter().append("line")
         .attr("stroke", "#999")
-        .attr("stroke-width", 2);
+        .attr("stroke-width", 3);
 
 
 
