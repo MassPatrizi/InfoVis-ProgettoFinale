@@ -4,15 +4,15 @@
 <head>
     <meta charset="utf-8" />
     <title>Top 100 BG Graph</title>
-    <!-- Pulsante per impostare la dark/light mode, avrebbe bisogno di più ottimizzazione -->
-    <!-- <button id="dark-mode-toggle">Attiva Dark Mode</button> -->
+    <!-- Button to set dark/light mode, could use more optimization -->
+    <!-- <button id="dark-mode-toggle">Activate Dark Mode</button> -->
     <script src="https://d3js.org/d3.v7.js"></script>
     <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
     <div id="my_header" style="text-align: center;">
-        <img id="backgroundImage" src="background.png" alt="Immagine di sfondo" />
+        <img id="backgroundImage" src="background.png" alt="Background image" />
         <h1 style="font-size: 35px;">Networks Graph for Top 100 BoardGames from BoardGameGeek.com</h1>
         <h3>
             <button id="returnButton"
@@ -25,15 +25,15 @@
     <div id="introduction" style="text-align: center; font-size:20px">
         <!-- <p class="large">Here are some instructions on how to navigate the graph:</p> -->
         <p class="large">
-            <strong> Interact with the graph by hovering the cursor over a node or by clicking on it.<br />
-            Hovering over a node let you visualize all the connection that game has with other games,</strong><br />
+            <strong>Interact with the graph by hovering the cursor over a node or by clicking on it.<br />
+            Hovering over a node lets you visualize all the connections that game has with other games,</strong><br />
 
         </p>
         <div class="boxed" style="text-align: left; display: inline-block; font-size:25px">
             <span style="text-align: center; display: block;">Links color legend:</span><br />
             A <span style="background-color: red;"><strong>red link</strong></span> means that players of that
-            game liked the other one, and viceversa [strongest connection,<br /> 
-            this is what the graph shows by deafult without the needing of interacting with it.]<br />
+            game liked the other one, and vice versa [strongest connection,<br /> 
+            this is what the graph shows by default without needing to interact with it.]<br />
             <br />
             A <span style="background-color: green"><strong>green link</strong></span> means that the players of
             the selected game liked the other one.<br /><br />
