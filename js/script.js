@@ -60,12 +60,14 @@ d3.select("#returnButton").on("click", function () {
     //d3.select("#graph").style("display", "none")
     d3.select("#graph")
         .style("opacity", 1)
-        .transition().duration(400).style("opacity", 0);
+        .transition().duration(400).style("opacity", 0)
+        
     d3.select("#returnButton").style("display", "none");
+    d3.select("#graph").style("display", "none")
 });
 // Dimensioni della finestra
-const margin = { top: 10, right: 30, bottom: 30, left: 40 },
-    width = window.innerWidth - margin.left - margin.right,
+const margin = { top: 10, right: 30, bottom: 50, left: 40 },
+    width = window.innerWidth,
     height = window.innerHeight - margin.top - margin.bottom;
 
 // Crea l'svg
@@ -257,11 +259,23 @@ d3.json("output.json").then(function (data) {
                 }
             });
             // Inserisci l'immagine di copertina
-            page1.append("img").attr("src", d.image).style("display", "block").style("margin", "auto")
+            page1.append("img")
+                .attr("src", d.image)
+                .style("display", "block")
+                .style("margin", "auto")
+                .style("width", '50%')
+                .style('heigth', '50%')
+
 
             // Crea la seconda pagina del popup
             const page2 = popup.append("div").attr("id", "page2").style("display", "none");
-            page2.append("img").attr("src", d.image).style("display", "block").style("margin", "auto")
+            page2.append("img")
+                .attr("src", d.image)
+                .style("display", "block")
+                .style("margin", "auto")
+                .style("width", '50%')
+                .style('heigth', '50%')
+                
             page2.append("h3").text("Related games based on players' reviews");
             const connectedNodes = nodeMap[d.id];
             page2.append("pre").text(connectedNodes.join("\n"));
@@ -321,8 +335,8 @@ d3.json("output.json").then(function (data) {
                 .style("stroke", "red")
 
             tip.style("opacity", 1)
-                .html("<span style='font-size:28px'><strong>" + d.name+ "</span>")
-                .style("top", (mouseY + 50) + "px");
+                /* .html("<span style='font-size:28px'><strong>" + d.name+ "</span>")
+                .style("top", (mouseY + 50) + "px"); */
 
             tip.append("img")
                 .attr("src", d.image)
@@ -333,7 +347,7 @@ d3.json("output.json").then(function (data) {
                 
             tip.append("p")
                 .html('Click on the node to show full information about <strong>'
-                    +d.name+'</strong>')
+                    + "<span style='font-size:20px'>"+d.name+'</strong>')
 
             link
                 .filter(function (l) {
