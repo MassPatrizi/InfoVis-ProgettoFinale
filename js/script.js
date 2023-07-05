@@ -19,6 +19,23 @@ d3.select("#startButton").on("click", function () {
         .transition().duration(1200).style("opacity", 1);
 });
 
+// Pulsante per impostare la dark/light mode, avrebbe bisogno di più ottimizzazione
+/* // Seleziona il pulsante e il body
+const darkModeToggle = document.querySelector('#dark-mode-toggle');
+const body = document.querySelector('body');
+
+// Aggiungi un listener per il click sul pulsante
+darkModeToggle.addEventListener('click', () => {
+    // Attiva/disattiva la classe dark-mode sul body
+    body.classList.toggle('dark-mode');
+
+    // Aggiorna il testo del pulsante
+    if (body.classList.contains('dark-mode')) {
+        darkModeToggle.textContent = 'Disattiva Dark Mode';
+    } else {
+        darkModeToggle.textContent = 'Attiva Dark Mode';
+    }
+}); */
 
 function showPopupImage(img) {
     document.querySelector(".overlay img").src = img.src;
@@ -54,8 +71,8 @@ const margin = { top: 10, right: 30, bottom: 30, left: 40 },
 // Crea l'svg
 const svg = d3.select("#graph")
     .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", width)
+    .attr("height", height)
     .call(d3.zoom().on("zoom", function (event) {
         svg.attr("transform", event.transform);
     }))
@@ -142,12 +159,22 @@ d3.json("output.json").then(function (data) {
            .style("fill", "black"); */
 
     // Inizializza i link
-    const link = svg
+    /* const link = svg
         .selectAll("line")
         .data(data.links)
         .join("line")
         .style("stroke", "#999")
-        .attr("marker-end", "url(#arrow)");
+        .attr("marker-end", "url(#arrow)"); */
+
+    var link = svg.append("g")
+        .attr("class", "links")
+        .selectAll("line")
+        .data(data.links)
+        .enter().append("line")
+        .attr("stroke", "#999")
+        .attr("stroke-width", 2);
+
+
 
     // Definisci il tooltip
     var tip = d3.select("#graph").append("div")
@@ -181,7 +208,7 @@ d3.json("output.json").then(function (data) {
         .data(data.nodes)
         .join("circle")
         .attr("r", 155)
-        .style("stroke", "white")
+        .style("stroke", "black")
         .style("stroke-width", 2)
         .style("fill", "#FFFFFF")
         .style("fill", d => `url(#pattern-${d.id})`)
@@ -290,8 +317,11 @@ d3.json("output.json").then(function (data) {
             d3.select(event.currentTarget)
                 .transition()
                 .duration(200)
+                .style("stroke-width", 20)
                 .style("stroke", "red")
-                .style("stroke-width", 8);
+
+            tip.append("img").attr("src", d.image).style("display", "block").style("margin", "auto")
+
             tip.style("opacity", 1)
                 .html('<br> Selected Game: ' + "<span style='color:green'>" + d.name + "</span>" +
                     '<br> Related games: <br>' + connectedNodes.join(" ||\n "))
@@ -305,14 +335,15 @@ d3.json("output.json").then(function (data) {
                 .style("stroke", function (l) {
                     return linkColor(l, links);
                 })
-                .style("stroke-width", "15")
+                .style("stroke-width", "18")
+                .style("opacity",1)
                 .attr("marker-end", function (l) {
                     return arrowColor(l);
                 });
 
-            node.filter(function (n) {
+            /* node.filter(function (n) {
                             return connectedNodes.includes(n.name);
-            }).transition().duration(200).style("stroke", "white" ).style("stroke-width", "8")
+            }).transition().duration(200).style("stroke", "black" ).style("stroke-width", "8") */
 
         })
         .on("mouseout", (event, d) => {
@@ -321,16 +352,24 @@ d3.json("output.json").then(function (data) {
             d3.select(event.currentTarget)
                 .transition()
                 .duration(2000)
-                .delay(1000).style("stroke", "none");
-            link.filter(function (l) {
-                return l.source === d || l.target === d;
-            }).transition().duration(2000).style("stroke", "#999").style("stroke-width", null)
+                .delay(1000).style("stroke", "black")
+                .style("stroke-width", 2);
+                link.filter(function(l) {
+                    return l.source === d || l.target === d;
+                }).transition().duration(2000).style("opacity", function(l) {
+                    if (linkColor(l, data.links) === "red") {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }).style("stroke-width", null);
+                
             link.filter(function (l) {
                 return l.source === d || l.target === d;
             }).transition().delay(2000).duration(2000).attr("marker-end", "url(#arrow)")
-            node.filter(function (n) {
+            /* node.filter(function (n) {
                 return connectedNodes.includes(n.name);
-            }).transition().delay(1100).style("stroke", "none").style("stroke-width", null);
+            }).transition().delay(1100).style("stroke", "none").style("stroke-width", 2); */
         })
 
 
@@ -367,6 +406,7 @@ d3.json("output.json").then(function (data) {
     // Aggiorna la posizione dei nodi
     function ticked() {
         link
+            .attr("stroke", function (d) { return linkColor(d, data.links); })
             .attr("x1", function (d) { return d.source.x; })
             .attr("y1", function (d) { return d.source.y; })
             .attr("x2", function (d) { return d.target.x; })
@@ -376,9 +416,9 @@ d3.json("output.json").then(function (data) {
             .attr("cx", function (d) { return d.x; })
             .attr("cy", function (d) { return d.y; });
 
-        label
+        /* label
             .attr("x", function (d) { return d.x; })
-            .attr("y", function (d) { return d.y; });
+            .attr("y", function (d) { return d.y; }); */
 
     }
 
@@ -403,11 +443,13 @@ d3.json("output.json").then(function (data) {
         });
 
         if (isBidirectional) {
-            return "orange";
+            return "red";
+        } else if (!currentNode) {
+            return "none";
         } else if (d.source.id === currentNode.id) {
-            return "blue";
-        } else if (d.target.id === currentNode.id) {
             return "green";
+        } else if (d.target.id === currentNode.id) {
+            return "blue";
         } else {
             return "black";
         }
