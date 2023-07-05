@@ -174,7 +174,7 @@ d3.json("output.json").then(function (data) {
         .data(data.links)
         .enter().append("line")
         .attr("stroke", "#999")
-        .attr("stroke-width", 3);
+        .attr("stroke-width", 2);
 
 
 
@@ -364,9 +364,9 @@ d3.json("output.json").then(function (data) {
                     return arrowColor(l);
                 });
 
-            /* node.filter(function (n) {
+            node.filter(function (n) {
                             return connectedNodes.includes(n.name);
-            }).transition().duration(200).style("stroke", "black" ).style("stroke-width", "8") */
+            }).transition().duration(200).style("stroke", "black" ).style("stroke-width", "8") 
 
         })
         .on("mouseout", (event, d) => {
@@ -376,7 +376,7 @@ d3.json("output.json").then(function (data) {
             d3.select(event.currentTarget)
                 .transition()
                 .duration(2000)
-                .delay(1000).style("stroke", "black")
+                .style("stroke", "black")
                 .style("stroke-width", 2);
             link.filter(function (l) {
                 return l.source === d || l.target === d;
