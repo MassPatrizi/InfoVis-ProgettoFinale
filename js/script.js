@@ -298,6 +298,8 @@ d3.json("top100-dataset.json").then(function (data) {
                 .style("position", "absolute")
                 .style("left", "50%")
                 .style("transform", "translateX(-120%)")
+                .style("color", "white")
+                .style("background-color", "blue")
                 .on("click", function () {
                     // Mostra la prima pagina e nascondi la seconda pagina
                     page1.style("display", null);
@@ -308,6 +310,8 @@ d3.json("top100-dataset.json").then(function (data) {
                 .style("position", "absolute")
                 .style("left", "50%")
                 .style("transform", "translateX(20%)")
+                .style("color", "white")
+                .style("background-color", "blue")
                 .on("click", function () {
                     // Mostra la seconda pagina e nascondi la prima pagina
                     page1.style("display", "none");
@@ -381,11 +385,11 @@ d3.json("top100-dataset.json").then(function (data) {
                 .style("stroke-width", 2);
             link.filter(function (l) {
                 return l.source === d || l.target === d;
-            }).transition().duration(2000).style("opacity", function (l) {
+            }).transition().duration(2000).style("stroke", function (l) {
                 if (linkColor(l, data.links) === "red") {
-                    return 1;
+                    return "red";
                 } else {
-                    return 0;
+                    return "#999";
                 }
             }).style("stroke-width", null);
 
@@ -470,7 +474,7 @@ d3.json("top100-dataset.json").then(function (data) {
         if (isBidirectional) {
             return "red";
         } else if (!currentNode) {
-            return "none";
+            return "#999";
         } else if (d.source.id === currentNode.id) {
             return "green";
         } else if (d.target.id === currentNode.id) {
