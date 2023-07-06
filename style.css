@@ -103,7 +103,7 @@ p.large {
     left: 0;
     background-color: #111; /* Black*/
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
+    padding-top: 30px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
   }
   
@@ -142,10 +142,14 @@ p.large {
     color: white;
     padding: 10px 15px;
     border: none;
+    border-radius: 10px;
   }
   
   .openbtn:hover {
-    background-color: #444;
+    background-color: #ffffff;
+    border-color: #000000;
+    color: #000000;
+    border: 1px solid black;
   }
   
   /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
@@ -164,5 +168,13 @@ p.large {
     padding: 10px 0;
     border-bottom: 1px solid #c0c0c0;
     cursor: pointer;
+    color: white;
+  }
+
+  #mySidebar li:hover {
+    padding: 10px 0;
+    border-bottom: 1px solid #c0c0c0;
+    cursor: pointer;
+    color: rgb(255, 195, 127);
   }
   

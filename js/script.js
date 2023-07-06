@@ -85,6 +85,7 @@ d3.select("#returnButton").on("click", function () {
     d3.select("#returnButton").style("display", "none");
     d3.select("#graph").style("display", "none")
 });
+
 // Dimensioni della finestra
 const margin = { top: 10, right: 30, bottom: 50, left: 40 },
     width = window.innerWidth,
@@ -122,7 +123,6 @@ d3.json("top100-dataset.json").then(function (data) {
 
     // Crea una funzione di zoom
     var zoom = d3.zoom()
-        .scaleExtent([1, 10])
         .translateExtent([[-100, -100], [width + 90, height + 100]])
         .on("zoom", function (event) {
             svg.attr("transform", event.transform);
@@ -134,8 +134,7 @@ d3.json("top100-dataset.json").then(function (data) {
         .data(games)
         .enter()
         .append("li")
-        .text(function (d) { return d.name; })
-        .style("color", "white")
+        .text(function (d) { return d.name; });
 
     // Aggiungi un gestore di eventi click agli elementi della lista
     listItems.on("click", function (event, d) {
@@ -147,8 +146,9 @@ d3.json("top100-dataset.json").then(function (data) {
         var y = node.y;
 
         // Sposta la visuale sul nodo utilizzando d3.zoomIdentity
-        svg.transition()
-            .duration(750)
+        d3.select("#graph")
+            .transition()
+            .duration(1000)
             .call(zoom.transform, d3.zoomIdentity.translate(width / 2 - x, height / 2 - y));
     });
 
@@ -420,9 +420,9 @@ d3.json("top100-dataset.json").then(function (data) {
                 })
                 .style("stroke-width", "18")
                 .style("opacity", 1)
-                .attr("marker-end", function (l) {
+/*                 .attr("marker-end", function (l) {
                     return arrowColor(l);
-                });
+                }); */
 
             node.filter(function (n) {
                 return connectedNodes.includes(n.name);
@@ -448,9 +448,9 @@ d3.json("top100-dataset.json").then(function (data) {
                 }
             }).style("stroke-width", null);
 
-            link.filter(function (l) {
+/*             link.filter(function (l) {
                 return l.source === d || l.target === d;
-            }).transition().delay(2000).duration(2000).attr("marker-end", "url(#arrow)")
+            }).transition().delay(2000).duration(2000).attr("marker-end", "url(#arrow)") */
             /* node.filter(function (n) {
                 return connectedNodes.includes(n.name);
             }).transition().delay(1100).style("stroke", "none").style("stroke-width", 2); */
@@ -562,7 +562,7 @@ d3.json("top100-dataset.json").then(function (data) {
         return matches;
     }
      */
-    function arrowColor(d) {
+/*     function arrowColor(d) {
         if (d.source === currentNode) {
             return "url(#arrow-red)";
         } else if (d.target === currentNode) {
@@ -572,5 +572,5 @@ d3.json("top100-dataset.json").then(function (data) {
         } else {
             return "url(#arrow-black)";
         }
-    }
+    } */
 });
