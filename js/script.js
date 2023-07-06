@@ -19,6 +19,26 @@ d3.select("#startButton").on("click", function () {
         .transition().duration(1200).style("opacity", 1);
 });
 
+// Sposta tutti gli elementi a destra di 250px all'apertura della sidebar
+function openNav() {
+    document.getElementById("mySidebar").style.width = "250px";
+    document.getElementById("my_header").style.marginLeft = "250px";
+    document.getElementById("graph").style.marginLeft = "250px";
+    document.getElementById("introduction").style.marginLeft = "250px";
+    document.getElementById("returnButton").style.marginLeft = "250px";
+
+
+}
+
+function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("my_header").style.marginLeft = "0";
+    document.getElementById("graph").style.marginLeft = "0";
+    document.getElementById("introduction").style.marginLeft = "0";
+    document.getElementById("returnButton").style.marginLeft = "0";
+
+}
+
 // Pulsante per impostare la dark/light mode, avrebbe bisogno di più ottimizzazione
 /* // Seleziona il pulsante e il body
 const darkModeToggle = document.querySelector('#dark-mode-toggle');
@@ -61,7 +81,7 @@ d3.select("#returnButton").on("click", function () {
     d3.select("#graph")
         .style("opacity", 1)
         .transition().duration(400).style("opacity", 0)
-        
+
     d3.select("#returnButton").style("display", "none");
     d3.select("#graph").style("display", "none")
 });
@@ -169,6 +189,7 @@ d3.json("top100-dataset.json").then(function (data) {
         .style("stroke", "#999")
         .attr("marker-end", "url(#arrow)"); */
 
+    // Defizione dei collegamenti / archi
     var link = svg.append("g")
         .attr("class", "links")
         .selectAll("line")
@@ -176,8 +197,6 @@ d3.json("top100-dataset.json").then(function (data) {
         .enter().append("line")
         .attr("stroke", "#999")
         .attr("stroke-width", 2);
-
-
 
     // Definisci il tooltip
     var tip = d3.select("#graph").append("div")
@@ -276,7 +295,7 @@ d3.json("top100-dataset.json").then(function (data) {
                 .style("margin", "auto")
                 .style("width", '50%')
                 .style('heigth', '50%')
-                
+
             page2.append("h3").text("Related games based on players' reviews");
             const connectedNodes = nodeMap[d.id];
             page2.append("pre").text(connectedNodes.join("\n"));
@@ -340,8 +359,8 @@ d3.json("top100-dataset.json").then(function (data) {
                 .style("stroke", "red")
 
             tip.style("opacity", 1)
-                /* .html("<span style='font-size:28px'><strong>" + d.name+ "</span>")
-                .style("top", (mouseY + 50) + "px"); */
+            /* .html("<span style='font-size:28px'><strong>" + d.name+ "</span>")
+            .style("top", (mouseY + 50) + "px"); */
 
             tip.append("img")
                 .attr("src", d.image)
@@ -349,10 +368,10 @@ d3.json("top100-dataset.json").then(function (data) {
                 .attr("height", 200)
                 .style("display", "block")
                 .style("margin", "auto")
-                
+
             tip.append("p")
                 .html('Click on the node to show full information about <strong>'
-                    + "<span style='font-size:20px'>"+d.name+'</strong>')
+                    + "<span style='font-size:20px'>" + d.name + '</strong>')
 
             link
                 .filter(function (l) {
@@ -370,8 +389,8 @@ d3.json("top100-dataset.json").then(function (data) {
                 });
 
             node.filter(function (n) {
-                            return connectedNodes.includes(n.name);
-            }).transition().duration(200).style("stroke", "black" ).style("stroke-width", "8") 
+                return connectedNodes.includes(n.name);
+            }).transition().duration(200).style("stroke", "black").style("stroke-width", "8")
 
         })
         .on("mouseout", (event, d) => {
