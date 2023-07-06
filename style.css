@@ -133,6 +133,9 @@ p.large {
   
   /* The button used to open the sidebar */
   .openbtn {
+    position: fixed;
+    top: 30px;
+    left: 30px;
     font-size: 20px;
     cursor: pointer;
     background-color: #111;
@@ -156,3 +159,10 @@ p.large {
     .sidebar {padding-top: 15px;}
     .sidebar a {font-size: 18px;}
   }
+
+  #mySidebar li {
+    padding: 10px 0;
+    border-bottom: 1px solid #c0c0c0;
+    cursor: pointer;
+  }
+  

@@ -117,6 +117,42 @@ d3.json("top100-dataset.json").then(function (data) {
     });
     let currentNode;
 
+    // Crea un array di giochi con id e nome
+    var games = data.nodes.map(function (d) { return { id: d.id, name: d.name }; });
+
+    // Crea una funzione di zoom
+    var zoom = d3.zoom()
+        .scaleExtent([1, 10])
+        .translateExtent([[-100, -100], [width + 90, height + 100]])
+        .on("zoom", function (event) {
+            svg.attr("transform", event.transform);
+        });
+
+    // Seleziona l'elemento della lista e aggiungi i nomi dei giochi come elementi figli
+    var list = d3.select("#mySidebar");
+    var listItems = list.selectAll("li")
+        .data(games)
+        .enter()
+        .append("li")
+        .text(function (d) { return d.name; })
+        .style("color", "white")
+
+    // Aggiungi un gestore di eventi click agli elementi della lista
+    listItems.on("click", function (event, d) {
+        // Trova il nodo corrispondente nel grafo
+        var node = data.nodes.find(function (n) { return n.id === d.id; });
+
+        // Calcola le coordinate del centro del nodo
+        var x = node.x;
+        var y = node.y;
+
+        // Sposta la visuale sul nodo utilizzando d3.zoomIdentity
+        svg.transition()
+            .duration(750)
+            .call(zoom.transform, d3.zoomIdentity.translate(width / 2 - x, height / 2 - y));
+    });
+
+
     /*    // Rappresentazione della freccia per indicare il verso del collegamento
        svg.append("defs").append("marker")
            .attr("id", "arrow")
@@ -129,7 +165,7 @@ d3.json("top100-dataset.json").then(function (data) {
            .append("path")
            .attr("d", "M0,-3L10,0L0,3")
            .style("fill", "#9999");
-   
+     
        // Freccia rossa 
        svg.append("defs").append("marker")
            .attr("id", "arrow-red")
@@ -142,7 +178,7 @@ d3.json("top100-dataset.json").then(function (data) {
            .append("path")
            .attr("d", "M0,-3L10,0L0,3")
            .style("fill", "red");
-   
+     
        // Freccia rossa 
        svg.append("defs").append("marker")
            .attr("id", "arrow-blue")
@@ -155,7 +191,7 @@ d3.json("top100-dataset.json").then(function (data) {
            .append("path")
            .attr("d", "M0,-3L10,0L0,3")
            .style("fill", "blue");
-   
+     
        // Freccia rossa 
        svg.append("defs").append("marker")
            .attr("id", "arrow-green")
@@ -168,7 +204,7 @@ d3.json("top100-dataset.json").then(function (data) {
            .append("path")
            .attr("d", "M0,-3L10,0L0,3")
            .style("fill", "green");
-   
+     
        svg.append("defs").append("marker")
            .attr("id", "arrow-black")
            .attr("viewBox", "0 -5 10 10")
@@ -507,7 +543,7 @@ d3.json("top100-dataset.json").then(function (data) {
         links = data.links;
         const matches = new Map();
         links.forEach(link => {
-
+    
             if ((link.source.id === d.target.id && link.target.id === d.source.id)) {
                 links.forEach(link2 => {
                     if (link2.source.id === d.source.id && link2.target.id === d.target.id) {
