@@ -385,9 +385,9 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
                 }
             }).style("stroke-width", null);
 
-            /* node.filter(function (n) {
+            node.filter(function (n) {
                 return connectedNodes.includes(n.name);
-            }).transition().delay(1100).style("stroke", "none").style("stroke-width", 2); */
+            }).transition().duration(2000).style("stroke", "black").style("stroke-width", "2");
         })
 
 
