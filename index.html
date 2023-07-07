@@ -20,7 +20,8 @@
         </h3>
 
         <div id="mySidebar" class="sidebar">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: white;">&times;</a>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: rgb(0, 0, 0);">&times;</a>
+            <h1>List of games sorted by ranking</h1>
         </div>
 
         <div id="main">
@@ -52,14 +53,16 @@
 
         <p class="large">Click on a game to show a popup containing all the info about that game:</p>
         <div style="display: flex; justify-content: center;">
-            <img src="images/popup1.png" style="width: 200px; margin-right: 10px; border-radius: 5px;"
+            <img src="images/popup1.png"
+                style="width: 200px; margin-right: 10px; border-radius: 5px;border: 1px solid black;"
                 onclick="showPopupImage(this)" />
 
             <div class="overlay" onclick="hidePopupImage()">
                 <img src="" />
             </div>
 
-            <img src="images/popup2.png" style="width: 200px;border-radius: 5px;" onclick="showPopupImage(this)" />
+            <img src="images/popup2.png" style="width: 200px;border-radius: 5px;border: 1px solid black;"
+                onclick="showPopupImage(this)" />
             <div class="overlay" onclick="hidePopupImage()">
                 <img src="" />
             </div>

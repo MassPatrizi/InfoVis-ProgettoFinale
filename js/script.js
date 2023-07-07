@@ -27,7 +27,6 @@ function openNav() {
     document.getElementById("introduction").style.marginLeft = "250px";
     document.getElementById("returnButton").style.marginLeft = "250px";
 
-
 }
 
 function closeNav() {
@@ -118,23 +117,37 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
     });
     let currentNode;
 
-    // Crea un array di giochi con id e nome
-    var games = data.nodes.map(function (d) { return { id: d.id, name: d.name }; });
+    // Crea un array di giochi con id, nome e thumbnail
+    var games = data.nodes.map(function (d) { return { id: d.id, name: d.name, thumbnail: d.thumbnail }; });
 
     // Crea una funzione di zoom
     var zoom = d3.zoom()
+        .scaleExtent([0.3, 0.7])
         .translateExtent([[-100, -100], [width + 90, height + 100]])
         .on("zoom", function (event) {
             svg.attr("transform", event.transform);
         });
 
-    // Seleziona l'elemento della lista e aggiungi i nomi dei giochi come elementi figli
+    // Seleziona l'elemento della lista e aggiungi i nomi dei giochi
     var list = d3.select("#mySidebar");
     var listItems = list.selectAll("li")
         .data(games)
         .enter()
         .append("li")
+
+    // Aggiunge l'immagine del gioco come sfondo nell'elenco
+    listItems.append("img")
+        .attr("src", function (d) { return d.thumbnail; })
+        .attr("class", "background-image");
+
+    // Aggiunge il nome del gioco
+    listItems.append("span")
+        .style("color", "white")
+        .style("font-weight", "bold")
+        .style("font-size", "30px")
+        .style("-webkit-text-stroke", " 1.5px black")
         .text(function (d) { return d.name; });
+
 
     // Aggiungi un gestore di eventi click agli elementi della lista
     listItems.on("click", function (event, d) {
@@ -151,79 +164,6 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
             .duration(1000)
             .call(zoom.transform, d3.zoomIdentity.translate(width / 2 - x, height / 2 - y));
     });
-
-
-    /*    // Rappresentazione della freccia per indicare il verso del collegamento
-       svg.append("defs").append("marker")
-           .attr("id", "arrow")
-           .attr("viewBox", "0 -5 10 10")
-           .attr("refX", 21.5)
-           .attr("refY", 0)
-           .attr("markerWidth", 10)
-           .attr("markerHeight", 13)
-           .attr("orient", "auto")
-           .append("path")
-           .attr("d", "M0,-3L10,0L0,3")
-           .style("fill", "#9999");
-     
-       // Freccia rossa 
-       svg.append("defs").append("marker")
-           .attr("id", "arrow-red")
-           .attr("viewBox", "0 -5 10 10")
-           .attr("refX", 21.5)
-           .attr("refY", 0)
-           .attr("markerWidth", 10)
-           .attr("markerHeight", 13)
-           .attr("orient", "auto")
-           .append("path")
-           .attr("d", "M0,-3L10,0L0,3")
-           .style("fill", "red");
-     
-       // Freccia rossa 
-       svg.append("defs").append("marker")
-           .attr("id", "arrow-blue")
-           .attr("viewBox", "0 -5 10 10")
-           .attr("refX", 21.5)
-           .attr("refY", 0)
-           .attr("markerWidth", 10)
-           .attr("markerHeight", 13)
-           .attr("orient", "auto")
-           .append("path")
-           .attr("d", "M0,-3L10,0L0,3")
-           .style("fill", "blue");
-     
-       // Freccia rossa 
-       svg.append("defs").append("marker")
-           .attr("id", "arrow-green")
-           .attr("viewBox", "0 -5 10 10")
-           .attr("refX", 21.5)
-           .attr("refY", 0)
-           .attr("markerWidth", 10)
-           .attr("markerHeight", 13)
-           .attr("orient", "auto")
-           .append("path")
-           .attr("d", "M0,-3L10,0L0,3")
-           .style("fill", "green");
-     
-       svg.append("defs").append("marker")
-           .attr("id", "arrow-black")
-           .attr("viewBox", "0 -5 10 10")
-           .attr("refX", 21.5)
-           .attr("refY", 0)
-           .attr("markerWidth", 10)
-           .attr("markerHeight", 13)
-           .attr("orient", "auto")
-           .append("path")
-           .attr("d", "M0,-3L10,0L0,3")
-           .style("fill", "black"); */
-
-    // Inizializza i link
-    /* const link = svg
-        .selectAll("line")
-        .data(data.links)
-        .join("line")
-        .style("stroke", "#999")
-        .attr("marker-end", "url(#arrow)"); */
 
     // Defizione dei collegamenti / archi
     var link = svg.append("g")
@@ -420,9 +360,6 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
                 })
                 .style("stroke-width", "18")
                 .style("opacity", 1)
-/*                 .attr("marker-end", function (l) {
-                    return arrowColor(l);
-                }); */
 
             node.filter(function (n) {
                 return connectedNodes.includes(n.name);
@@ -448,9 +385,6 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
                 }
             }).style("stroke-width", null);
 
-/*             link.filter(function (l) {
-                return l.source === d || l.target === d;
-            }).transition().delay(2000).duration(2000).attr("marker-end", "url(#arrow)") */
             /* node.filter(function (n) {
                 return connectedNodes.includes(n.name);
             }).transition().delay(1100).style("stroke", "none").style("stroke-width", 2); */
@@ -539,38 +473,4 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
         }
     }
 
-    /* function bestMatches(){
-        links = data.links;
-        const matches = new Map();
-        links.forEach(link => {
-    
-            if ((link.source.id === d.target.id && link.target.id === d.source.id)) {
-                links.forEach(link2 => {
-                    if (link2.source.id === d.source.id && link2.target.id === d.target.id) {
-                        matches.set(link.id, link2.id)
-                    }
-                })
-            }
-            else if (link.source.id === d.source.id && link.target.id === d.target.id) {
-                links.forEach(link2 => {
-                    if (link2.source.id === d.target.id && link2.target.id === d.source.id) {
-                        matches.set(link.id, link2.id)
-                    }
-                })
-            }
-        });
-        return matches;
-    }
-     */
-/*     function arrowColor(d) {
-        if (d.source === currentNode) {
-            return "url(#arrow-red)";
-        } else if (d.target === currentNode) {
-            return "url(#arrow-blue)";
-        } else if (d.source === currentNode && d.target === currentNode) {
-            return "url(#arrow-green)";
-        } else {
-            return "url(#arrow-black)";
-        }
-    } */
 });
