@@ -104,8 +104,8 @@ const svg = d3.select("#graph")
         `translate(${margin.left}, ${margin.top})`);
 
 // Carica i dati dal dataset formattato
-//d3.json("top40-dataset.json").then(function (data) {
-d3.json("top100-dataset.json").then(function (data) {
+//d3.json("dataset/top40-dataset.json").then(function (data) {
+d3.json("dataset/top100-dataset.json").then(function (data) {
 
     // Dizionario per salvare le connessioni di ogni nodo
     const nodeMap = {};
@@ -292,7 +292,7 @@ d3.json("top100-dataset.json").then(function (data) {
             const page1 = popup.append("div").attr("id", "page1");
 
             // Carica il dataset originale con le informazioni aggiuntive
-            d3.json("dataset.json").then(function (additionalData) {
+            d3.json("dataset/dataset.json").then(function (additionalData) {
                 // Cerca le informazioni aggiuntive relative al nodo cliccato
                 const additionalInfo = additionalData.find(info => info.id === d.id);
                 // Aggiungi le informazioni aggiuntive al popup

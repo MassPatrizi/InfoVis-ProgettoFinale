@@ -12,7 +12,6 @@ def convert_json(input_json):
                 output_json["links"].append({"source": game["id"], "target": fan_liked})
     return output_json
 
-# Example usage
 with open('dataset.json', 'r') as f:
     input_json = json.load(f)
 output_json = convert_json(input_json)
