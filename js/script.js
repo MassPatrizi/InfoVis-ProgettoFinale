@@ -177,7 +177,7 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
         // Sposta la visuale sul nodo utilizzando d3.zoomIdentity
         svg.transition()
             .duration(1000)
-            .call(d3.zoom().transform, d3.zoomIdentity.translate(width / 2 - x, height / 2 - y).scale(2));
+            .call(zoom.transform, d3.zoomIdentity.translate(width / 2 - x, height / 2 - y));
     });
     
 
@@ -213,8 +213,8 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
         .attr("xlink:href", d => d.thumbnail)
         .attr("width", 310)
         .attr("height", 310)
-        .attr("x", d => -d.radius)
-        .attr("y", d => -d.radius);
+        .attr("x", 0)
+        .attr("y", 0);
 
     // Creazione dei nodi
     const node = svg
