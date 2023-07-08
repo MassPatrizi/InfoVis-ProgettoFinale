@@ -70,7 +70,6 @@ p.large {
 #returnButton {
   position: absolute;
   left: 50%;
-  display: none;
   transition: margin-left .5s;
   padding: 20px;
 }

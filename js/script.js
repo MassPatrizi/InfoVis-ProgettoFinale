@@ -1,4 +1,21 @@
-d3.select("#startButton").on("click", function () {
+// Verifica se l'elemento con ID "startButton" è presente nella pagina
+const startButton = document.querySelector("#startButton");
+if (startButton) {
+    startButton.addEventListener("click", () => {
+        window.location.href = "graph.html";
+    });
+}
+
+// Verifica se l'elemento con ID "returnButton" è presente nella pagina
+const returnButton = document.querySelector("#returnButton");
+if (returnButton) {
+    returnButton.addEventListener("click", () => {
+        window.location.href = "index.html";
+    });
+}
+
+
+/* d3.select("#startButton").on("click", function () {
     d3.select("#introduction")
         .style("opacity", 1)
         .transition().duration(400).style("opacity", 0);
@@ -7,7 +24,6 @@ d3.select("#startButton").on("click", function () {
         .transition().duration(400).style("opacity", 0);
     setTimeout(function () {
         d3.select("#introduction").style("display", "none")
-        d3.select("#backgroundImage").style("display", "none")
     }, 400);
     setTimeout(function () {
         d3.select("#graph").style("display", "block")
@@ -19,12 +35,32 @@ d3.select("#startButton").on("click", function () {
         .transition().duration(1200).style("opacity", 1);
 });
 
+d3.select("#returnButton").on("click", function () {
+    setTimeout(function () {
+        d3.select("#introduction").style("display", "block")
+            .style("opacity", 0)
+            .transition().duration(400).style("opacity", 1);
+        d3.select("#backgroundImage").style("display", "block")
+            .style("opacity", 0)
+            .transition().duration(400).style("opacity", 1);
+    }, 400);
+
+
+    //d3.select("#graph").style("display", "none")
+    d3.select("#graph")
+        .style("opacity", 1)
+        .transition().duration(400).style("opacity", 0)
+
+    d3.select("#returnButton").style("display", "none");
+    d3.select("#graph").style("display", "none")
+});
+ */
+
 // Sposta tutti gli elementi a destra di 250px all'apertura della sidebar
 function openNav() {
     document.getElementById("mySidebar").style.width = "250px";
     document.getElementById("my_header").style.marginLeft = "250px";
     document.getElementById("graph").style.marginLeft = "250px";
-    document.getElementById("introduction").style.marginLeft = "250px";
     document.getElementById("returnButton").style.marginLeft = "250px";
 
 }
@@ -64,26 +100,6 @@ function hidePopupImage() {
     document.querySelector(".overlay").style.display = "none";
 }
 
-
-d3.select("#returnButton").on("click", function () {
-    setTimeout(function () {
-        d3.select("#introduction").style("display", "block")
-            .style("opacity", 0)
-            .transition().duration(400).style("opacity", 1);
-        d3.select("#backgroundImage").style("display", "block")
-            .style("opacity", 0)
-            .transition().duration(400).style("opacity", 1);
-    }, 400);
-
-
-    //d3.select("#graph").style("display", "none")
-    d3.select("#graph")
-        .style("opacity", 1)
-        .transition().duration(400).style("opacity", 0)
-
-    d3.select("#returnButton").style("display", "none");
-    d3.select("#graph").style("display", "none")
-});
 
 // Dimensioni della finestra
 const margin = { top: 10, right: 30, bottom: 50, left: 40 },
@@ -153,17 +169,17 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
     listItems.on("click", function (event, d) {
         // Trova il nodo corrispondente nel grafo
         var node = data.nodes.find(function (n) { return n.id === d.id; });
-
+    
         // Calcola le coordinate del centro del nodo
         var x = node.x;
         var y = node.y;
-
+    
         // Sposta la visuale sul nodo utilizzando d3.zoomIdentity
-        d3.select("#graph")
-            .transition()
+        svg.transition()
             .duration(1000)
-            .call(zoom.transform, d3.zoomIdentity.translate(width / 2 - x, height / 2 - y));
+            .call(d3.zoom().transform, d3.zoomIdentity.translate(width / 2 - x, height / 2 - y).scale(2));
     });
+    
 
     // Defizione dei collegamenti / archi
     var link = svg.append("g")

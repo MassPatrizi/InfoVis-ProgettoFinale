@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Top 100 BG Graph</title>
+    <!-- Button to set dark/light mode, could use more optimization -->
+    <!-- <button id="dark-mode-toggle">Activate Dark Mode</button> -->
+    <script src="https://d3js.org/d3.v7.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div id="my_header" style="text-align: center;">
+        <h1 style="font-size: 35px;">Networks Graph for Top 100 BoardGames from BoardGameGeek.com</h1>
+        <h3>
+            <button id="returnButton"
+                style="font-size: large; padding: 10px 20px;stroke: black; stroke-width: 30px ; border-radius: 5px; background-color: lightblue; color: rgb(0, 0, 0);">Home
+                Page</button>
+        </h3>
+    </div>
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: rgb(0, 0, 0);">&times;</a>
+        <h1>List of games sorted by ranking</h1>
+    </div>
+
+    <div id="main">
+        <button class="openbtn" onclick="openNav()">&#9776; Games list</button>
+    </div>
+
+    <div id="graph"></div>
+
+    <script src="https://d3js.org/d3.v7.js"></script>
+    <script src="js/script.js" type="text/javascript"></script>
+
+</html>
