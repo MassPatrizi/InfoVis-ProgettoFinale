@@ -131,7 +131,7 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
             .style("stroke", function (l) {
                 return linkColor(l, links);
             })
-            .style("stroke-width", "18")
+            .style("stroke-width", "40")
             .style("opacity", 1)
 
         setTimeout(function () {
@@ -338,7 +338,7 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
                 .style("stroke", function (l) {
                     return linkColor(l, links);
                 })
-                .style("stroke-width", "18")
+                .style("stroke-width", "40")
                 .style("opacity", 1)
 
             node.filter(function (n) {
