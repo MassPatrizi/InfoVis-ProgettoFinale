@@ -3,7 +3,9 @@ const startButton = document.querySelector("#startButton");
 if (startButton) {
     startButton.addEventListener("click", () => {
         window.location.href = "graph.html";
+
     });
+
 }
 
 // Verifica se l'elemento con ID "returnButton" è presente nella pagina
@@ -14,54 +16,15 @@ if (returnButton) {
     });
 }
 
-
-/* d3.select("#startButton").on("click", function () {
-    d3.select("#introduction")
-        .style("opacity", 1)
-        .transition().duration(400).style("opacity", 0);
-    d3.select("#backgroundImage")
-        .style("opacity", 1)
-        .transition().duration(400).style("opacity", 0);
-    setTimeout(function () {
-        d3.select("#introduction").style("display", "none")
-    }, 400);
-    setTimeout(function () {
-        d3.select("#graph").style("display", "block")
-            .style("opacity", 0)
-            .transition().duration(1200).style("opacity", 1);
-    }, 400);
-
-    d3.select("#returnButton").style("display", "block").style("opacity", 0)
-        .transition().duration(1200).style("opacity", 1);
-});
-
-d3.select("#returnButton").on("click", function () {
-    setTimeout(function () {
-        d3.select("#introduction").style("display", "block")
-            .style("opacity", 0)
-            .transition().duration(400).style("opacity", 1);
-        d3.select("#backgroundImage").style("display", "block")
-            .style("opacity", 0)
-            .transition().duration(400).style("opacity", 1);
-    }, 400);
-
-
-    //d3.select("#graph").style("display", "none")
-    d3.select("#graph")
-        .style("opacity", 1)
-        .transition().duration(400).style("opacity", 0)
-
-    d3.select("#returnButton").style("display", "none");
-    d3.select("#graph").style("display", "none")
-});
- */
+// Avvia la barra e rotella di caricamento
+NProgress.start();
 
 // Sposta tutti gli elementi a destra di 250px all'apertura della sidebar
 function openNav() {
     document.getElementById("mySidebar").style.width = "250px";
     document.getElementById("my_header").style.marginLeft = "250px";
     document.getElementById("graph").style.marginLeft = "250px";
-    document.getElementById("returnButton").style.marginLeft = "250px";
+    //document.getElementById("returnButton").style.marginLeft = "250px";
 
 }
 
@@ -70,8 +33,7 @@ function closeNav() {
     document.getElementById("my_header").style.marginLeft = "0";
     document.getElementById("graph").style.marginLeft = "0";
     document.getElementById("introduction").style.marginLeft = "0";
-    document.getElementById("returnButton").style.marginLeft = "0";
-
+    document.getElementById("#returnButton").style.marginLeft = "0";
 }
 
 // Pulsante per impostare la dark/light mode, avrebbe bisogno di più ottimizzazione
@@ -115,8 +77,6 @@ const svg = d3.select("#graph")
         svg.attr("transform", event.transform);
     }))
     .append("g")
-    .attr("transform",
-        `translate(${margin.left}, ${margin.top})`);
 
 // Carica i dati dal dataset formattato
 //d3.json("dataset/top40-dataset.json").then(function (data) {
@@ -133,21 +93,10 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
     });
     let currentNode;
 
-    // Crea un array di giochi con id, nome e thumbnail
-    var games = data.nodes.map(function (d) { return { id: d.id, name: d.name, thumbnail: d.thumbnail }; });
-
-    // Crea una funzione di zoom
-    var zoom = d3.zoom()
-        .scaleExtent([0.3, 0.7])
-        .translateExtent([[-100, -100], [width + 90, height + 100]])
-        .on("zoom", function (event) {
-            svg.attr("transform", event.transform);
-        });
-
     // Seleziona l'elemento della lista e aggiungi i nomi dei giochi
     var list = d3.select("#mySidebar");
     var listItems = list.selectAll("li")
-        .data(games)
+        .data(data.nodes)
         .enter()
         .append("li")
 
@@ -169,17 +118,40 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
     listItems.on("click", function (event, d) {
         // Trova il nodo corrispondente nel grafo
         var node = data.nodes.find(function (n) { return n.id === d.id; });
-    
-        // Calcola le coordinate del centro del nodo
-        var x = node.x;
-        var y = node.y;
-    
-        // Sposta la visuale sul nodo utilizzando d3.zoomIdentity
-        svg.transition()
-            .duration(1000)
-            .call(zoom.transform, d3.zoomIdentity.translate(width / 2 - x, height / 2 - y));
+        currentNode = d;
+        links = data.links;
+        const connectedNodes = nodeMap[d.id];
+
+        link
+            .filter(function (l) {
+                return l.source === d || l.target === d;
+            })
+            .transition()
+            .duration(200)
+            .style("stroke", function (l) {
+                return linkColor(l, links);
+            })
+            .style("stroke-width", "18")
+            .style("opacity", 1)
+
+        setTimeout(function () {
+            link
+                .filter(function (l) {
+                    return l.source === d || l.target === d;
+                })
+                .transition()
+                .duration(5000)
+                .style("stroke", function (l) {
+                    if (linkColor(l, data.links) === "red") {
+                        return "red";
+                    } else {
+                        return "#999";
+                    }
+                })
+                .style("stroke-width", null);
+        }, 2000);
     });
-    
+
 
     // Defizione dei collegamenti / archi
     var link = svg.append("g")
@@ -351,8 +323,6 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
                 .style("stroke", "red")
 
             tip.style("opacity", 1)
-            /* .html("<span style='font-size:28px'><strong>" + d.name+ "</span>")
-            .style("top", (mouseY + 50) + "px"); */
 
             tip.append("img")
                 .attr("src", d.image)
@@ -414,18 +384,6 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
         }
     });
 
-
-
-    /* // Aggiungi i label ai nodi
-    const label = svg
-        .selectAll("text")
-        .data(data.nodes)
-        .join("text")
-        .attr("dx", -40)
-        .attr("dy", 50)
-        .style("font-size", 11)
-        .text(function (d) { return d.name }); */
-
     // Inizializzazione delle forze per la generazione dei nodi
     const simulation = d3.forceSimulation(data.nodes)
         .force("link", d3.forceLink()
@@ -435,7 +393,12 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
         )
         .force("charge", d3.forceManyBody().strength(-30000))
         .force("center", d3.forceCenter(width / 2, height / 2))
-        .on("end", ticked);
+        .on("end", function () {
+            ticked();
+            d3.select("#loader").style("display", "none");
+            d3.select("#graph").style("display", "block");
+            NProgress.done();
+        });
 
     // Aggiorna la posizione dei nodi
     function ticked() {
@@ -449,11 +412,6 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
         node
             .attr("cx", function (d) { return d.x; })
             .attr("cy", function (d) { return d.y; });
-
-        /* label
-            .attr("x", function (d) { return d.x; })
-            .attr("y", function (d) { return d.y; }); */
-
     }
 
     function linkColor(d, links) {
@@ -488,5 +446,4 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
             return "black";
         }
     }
-
 });

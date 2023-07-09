@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+    #graph {
+        display: none;
+    }
+
+    #loader {
+        display: block;
+    }
+</style>
 
 <head>
     <meta charset="utf-8" />
@@ -8,6 +17,8 @@
     <!-- <button id="dark-mode-toggle">Activate Dark Mode</button> -->
     <link rel="icon" type="image/x-icon" href="/images/Roma3-logo.png">
     <script src="https://d3js.org/d3.v7.js"></script>
+    <script src='plugin/nprogress.js' type="application/javascript"></script>
+    <link rel='stylesheet' href='plugin/nprogress.css' type="text/css" />
     <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -20,6 +31,9 @@
                 Page</button>
         </h3>
     </div>
+    <br \>
+    <div id="loader" style="text-align: center;">Loading, please wait...</div>
+
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="color: rgb(0, 0, 0);">&times;</a>
         <h1>List of games sorted by ranking</h1>
