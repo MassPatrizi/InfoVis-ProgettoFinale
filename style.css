@@ -74,6 +74,18 @@ p.large {
   transition: margin-left .5s;
   padding: 20px;
   cursor: pointer;
+  font-size: large;
+  padding: 10px 20px;
+  stroke: black;
+  stroke-width: 30px;
+  border-radius: 5px;
+  background-color: lightblue;
+  color: black;
+}
+
+#returnButton:hover {
+  background-color: blue;
+  color: white;
 }
 
 .overlay {
@@ -126,17 +138,18 @@ p.large {
   left: 30px;
   font-size: 20px;
   cursor: pointer;
-  background-color: #111;
-  color: white;
+  background-color: lightblue;
+  color: black;
   padding: 10px 15px;
-  border: none;
   border-radius: 10px;
+  stroke: black;
+  stroke-width: 30px;
 }
 
 .openbtn:hover {
-  background-color: #ffffff;
+  background-color: blue;
   border-color: #000000;
-  color: #000000;
+  color: white;
   border: 1px solid black;
 }
 

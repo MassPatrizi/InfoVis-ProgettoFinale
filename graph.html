@@ -18,6 +18,8 @@
     <link rel="icon" type="image/x-icon" href="/images/Roma3-logo.png">
     <script src="https://d3js.org/d3.v7.js"></script>
     <script src='plugin/nprogress.js' type="application/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <link rel='stylesheet' href='plugin/nprogress.css' type="text/css" />
     <link rel="stylesheet" href="style.css" />
 </head>
@@ -26,9 +28,7 @@
     <div id="my_header" style="text-align: center;">
         <h1 style="font-size: 35px;">Networks Graph for Top 100 BoardGames from BoardGameGeek.com</h1>
         <h3>
-            <button id="returnButton"
-                style="font-size: large; padding: 10px 20px;stroke: black; stroke-width: 30px ; border-radius: 5px; background-color: lightblue; color: rgb(0, 0, 0);">Home
-                Page</button>
+            <button id="returnButton"><i class="fa fa-home"> Home</i></button>
         </h3>
     </div>
     <br \>
@@ -40,7 +40,7 @@
     </div>
 
     <div id="main">
-        <button class="openbtn" onclick="openNav()">&#9776; Games list</button>
+        <button class="openbtn" onclick="openNav()"><i class="fa fa-bars"> Games</i></button>
     </div>
 
     <div id="graph"></div>
