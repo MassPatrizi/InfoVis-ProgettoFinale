@@ -49,7 +49,23 @@ p.large {
 }
 
 #popup {
-  border-radius: 20px;
+  height: auto;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 20%;
+  bottom: 10%;
+  right: 5px;
+  overflow-y: auto;
+  overflow-x: auto;
+  background-color: white;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  transition: 0.5s;
+  word-wrap:break-word;
+  border-radius: 10px;
+  border: 2px solid black;
+
 }
 
 #startButton {

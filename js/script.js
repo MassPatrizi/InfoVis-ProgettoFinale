@@ -203,18 +203,12 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
             d3.select("#popup").remove();
 
             // Crea un nuovo elemento popup
-            const popup = d3.select("body")
+            const popup = d3.select("#graph")
                 .append("div")
                 .attr("id", "popup")
-                .style("position", "absolute")
-                .style("left", event.pageX + "px")
-                .style("top", event.pageY + "px")
-                .style("background-color", "white")
-                .style("border", "1px solid blue")
-                .style("padding", "10px");
 
             // Titolo del popup
-            popup.append("h1").text(d.name);
+            popup.append("h1").text(d.name).style("text-align", "center");
 
             // Crea la prima pagina del popup
             const page1 = popup.append("div").attr("id", "page1");
@@ -247,8 +241,8 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
                 .attr("src", d.image)
                 .style("display", "block")
                 .style("margin", "auto")
-                .style("width", '50%')
-                .style('heigth', '50%')
+                .style("width", '80%')
+                .style('heigth', '80%')
 
 
             // Crea la seconda pagina del popup
@@ -257,8 +251,8 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
                 .attr("src", d.image)
                 .style("display", "block")
                 .style("margin", "auto")
-                .style("width", '50%')
-                .style('heigth', '50%')
+                .style("width", '80%')
+                .style('heigth', '80%')
 
             page2.append("h3").text("Related games based on players' reviews");
             const connectedNodes = nodeMap[d.id];
@@ -268,8 +262,8 @@ d3.json("dataset/top100-dataset.json").then(function (data) {
             popup.append("button")
                 .text("X")
                 .style("position", "absolute")
-                .style("right", "0")
-                .style("top", "0")
+                .style("right", "10px")
+                .style("top", "10px")
                 .style("fill", "red")
                 .on("click", function () {
                     d3.select("#popup").remove();
